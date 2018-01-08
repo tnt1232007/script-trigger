@@ -1,0 +1,8 @@
+{
+  "name": "script-trigger",
+  "productName": "Script Trigger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "electron.prod.js",
+  "license": "MIT"
+}
