@@ -61,10 +61,14 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 
 declare global {
   interface Window {
-      fs: any;
-      powershell: any;
-      fswrapper: any;
-      jsonwrapper: any;
+    fs: any;
+    powershell: any;
+    fswrapper: any;
+    jsonwrapper: any;
+  }
+
+  interface String {
+    format(...replacements: string[]): string;
   }
 }
 
@@ -72,3 +76,15 @@ declare global {
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+if (!String.prototype.format) {
+  String.prototype.format = function () {
+    const args = arguments;
+    return this.replace(/{(\d+)}/g, function (match, number) {
+      return typeof args[number] !== 'undefined'
+        ? args[number]
+        : match
+        ;
+    });
+  };
+}

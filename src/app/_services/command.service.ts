@@ -9,8 +9,11 @@ export class CommandService {
     const commands: Command[] = [];
     for (const cmd of allCommands) {
       const reg = new RegExp(cmd.voice);
-      if (reg.test(voice))
+      const matches = reg.exec(voice);
+      if (matches) {
+        cmd.params = matches.slice(1);
         commands.push(cmd);
+      }
     }
     return commands;
   }
@@ -22,7 +25,7 @@ export class CommandService {
 
     const ps = new window.powershell();
     for (const cmd of commands) {
-      ps.addCommand(cmd.command + ';');
+      ps.addCommand(cmd.command.format(...cmd.params) + ';');
     }
 
     ps.invoke().then(o => {
