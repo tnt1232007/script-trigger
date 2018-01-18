@@ -62,6 +62,9 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 declare global {
   interface Window {
       fs: any;
+      powershell: any;
+      fswrapper: any;
+      jsonwrapper: any;
   }
 }
 

@@ -4,5 +4,7 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  watchPath: 'D:/Dropbox/Software/Development/ScriptTrigger/TNT-ASUS.txt',
+  dbPath: 'D:/Dropbox/Software/Development/ScriptTrigger/db.json'
 };

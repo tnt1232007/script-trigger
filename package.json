@@ -26,8 +26,11 @@
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.0.0",
     "bootstrap": "4.0.0-beta.2",
+    "chokidar": "^2.0.0",
     "core-js": "^2.4.1",
     "jquery": "^3.2.1",
+    "jsonfile": "^4.0.0",
+    "node-powershell": "^3.3.1",
     "popper.js": "^1.12.9",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"

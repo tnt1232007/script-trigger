@@ -1,9 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-
 import { AppComponent } from './app.component';
-
+import { CommandService } from './_services/command.service';
 
 @NgModule({
   declarations: [
@@ -12,7 +11,7 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [CommandService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
