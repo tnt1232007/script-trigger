@@ -12,7 +12,8 @@
     "electron": "electron ./src/electron.dev",
     "package:win": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=win32 --arch=all --overwrite",
     "package:linux": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=linux --arch=all --overwrite",
-    "package:mac": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=mac --arch=all --overwrite"
+    "package:mac": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=mac --arch=all --overwrite",
+    "publish": "npm run package:win"
   },
   "private": true,
   "dependencies": {
