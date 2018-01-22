@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray } = require('electron');
+const { app, BrowserWindow, Menu, Tray, shell } = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -41,6 +41,16 @@ const createWindow = () => {
       win = null;
       tray = null;
     });
+
+    var handleRedirect = (e, url) => {
+      if(url != win.webContents.getURL()) {
+        e.preventDefault()
+        shell.openExternal(url)
+      }
+    }
+    
+    win.webContents.on('will-navigate', handleRedirect)
+    win.webContents.on('new-window', handleRedirect)
   }, 10000);
 }
 

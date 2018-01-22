@@ -1,20 +1,86 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to Script Trigger!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<header>
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="/assets/script.svg" width="30" height="30" class="d-inline-block align-top" alt=""> Script Trigger
+    </a>
+    <div class="form-inline ml-auto">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <span class="oi oi-magnifying-glass text-muted"></span>
+          </div>
+        </div>
+        <input class="form-control" type="search" placeholder="Search">
+      </div>
+    </div>
+  </nav>
+</header>
 
+<main>
+  <div class="fluid-container">
+    <div class="list-group">
+      <a *ngFor="let item of commands" (click)="edit(item)" href="#" data-toggle="modal" data-target="#exampleModal" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1 text-primary">{{item.name}}</h5>
+          <small>{{item.createdAt | amTimeAgo}}</small>
+        </div>
+        <p class="mb-1">{{item.script}}</p>
+        <small class="text-muted">{{item.voice}}</small>
+      </a>
+    </div>
+  </div>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <form (ngSubmit)="onSubmit()" #modalForm="ngForm" class="was-validated">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{command.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+              <div class="col-sm-10">
+                <input [(ngModel)]="command.name" type="text" class="form-control" id="inputname" name="inputName" #name="ngModel" required>
+                <div [hidden]="name.valid || name.pristine" class="invalid-feedback">
+                  Name is required
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputCommand" class="col-sm-2 col-form-label">Script</label>
+              <div class="col-sm-10">
+                <textarea [(ngModel)]="command.script" class="form-control" id="inputScript" name="inputScript" #script="ngModel" required rows="3"></textarea>
+                <div [hidden]="script.valid || script.pristine" class="invalid-feedback">
+                  Script is required
+                </div>
+                <small class="form-text">
+                  <a href="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg" class="text-muted">Powershell syntax</a>
+                </small>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputVoice" class="col-sm-2 col-form-label">Voice</label>
+              <div class="col-sm-10">
+                <input [(ngModel)]="command.voice" type="text" class="form-control" id="inputVoice" name="inputVoice">
+                <small class="form-text">
+                  <a href="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf" class="text-muted">Regular Expressions syntax</a>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!modalForm.form.valid">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer>
+</footer>

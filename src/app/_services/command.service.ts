@@ -4,8 +4,16 @@ import { Command } from '../_models/command';
 export class CommandService {
   constructor() { }
 
+  public loadCommands(): Command[] {
+    return window.jsonwrapper.readFileSync(environment.dbPath);
+  }
+
+  public saveCommands(commands: Command[]): void {
+    window.jsonwrapper.writeFileSync(environment.dbPath, commands);
+  }
+
   public extractCommands(voice: string): Command[] {
-    const allCommands = window.jsonwrapper.readFileSync(environment.dbPath);
+    const allCommands = this.loadCommands();
     const commands: Command[] = [];
     for (const cmd of allCommands) {
       const reg = new RegExp(cmd.voice);
@@ -25,7 +33,7 @@ export class CommandService {
 
     const ps = new window.powershell();
     for (const cmd of commands) {
-      ps.addCommand(cmd.command.format(...cmd.params) + ';');
+      ps.addCommand(cmd.script.format(...cmd.params) + ';');
     }
 
     ps.invoke().then(o => {
