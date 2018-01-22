@@ -1,15 +1,14 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { environment } from '../environments/environment';
 import { CommandService } from './_services/command.service';
 import { Command } from './_models/command';
-import * as hljs from 'highlight.js';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
   private keyword = '';
   private watcher: any;
   private commands: Command[];
@@ -33,10 +32,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     });
-  }
-
-  public ngAfterViewInit(): void {
-    hljs.initHighlightingOnLoad();
   }
 
   public ngOnDestroy(): void {

@@ -24,7 +24,7 @@
           <h5 class="mb-1 text-primary">{{command.id}}. {{command.name}}</h5>
           <small *ngIf="command.lastRunAt">{{command.lastRunAt | amTimeAgo}}</small>
         </div>
-        <pre class="mb-1"><code class="powershell">{{command.script}}</code></pre>
+        <pre class="my-1"><code highlight [code]="command.script"></code></pre>
         <small class="text-muted regex">{{command.voice}}</small>
       </a>
     </div>
@@ -34,7 +34,7 @@
 
   <div class="modal fade" id="commandModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
-      <form (ngSubmit)="commandForm.form.markAsDirty() && commandForm.form.valid && onSubmit() && commandModal.modal('hide')" #commandForm="ngForm">
+      <form #commandForm="ngForm">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{command.name}}</h5>
@@ -95,7 +95,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="commandForm.form.markAsDirty() && commandForm.form.valid && onSubmit()">Save</button>
           </div>
         </div>
       </form>
