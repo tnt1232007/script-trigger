@@ -5,11 +5,15 @@ export class CommandService {
   constructor() { }
 
   public loadCommands(): Command[] {
-    return window.jsonwrapper.readFileSync(environment.dbPath);
+    const commands: Command[] = window.jsonwrapper.readFileSync(environment.dbPath);
+    commands.forEach((command, index) => {
+      command.id = index + 1;
+    });
+    return commands;
   }
 
   public saveCommands(commands: Command[]): void {
-    window.jsonwrapper.writeFileSync(environment.dbPath, commands);
+    window.jsonwrapper.writeFileSync(environment.dbPath, commands, {spaces: 2});
   }
 
   public extractCommands(voice: string): Command[] {

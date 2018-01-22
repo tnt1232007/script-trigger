@@ -1,3 +1,22 @@
+pre{
+  white-space: pre-wrap;
+}
+
 .list-group-item {
   outline: none;
+}
+
+.fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+  z-index: 990;
+  -webkit-font-smoothing: antialiased;
+}
+
+:host-context(.modal-open) .fab {
+  margin-right: 17px;
 }

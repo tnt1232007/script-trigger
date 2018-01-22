@@ -1,14 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { environment } from '../environments/environment';
 import { CommandService } from './_services/command.service';
 import { Command } from './_models/command';
+import * as hljs from 'highlight.js';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
+  private keyword = '';
   private watcher: any;
   private commands: Command[];
   private command: Command = {} as Command;
@@ -33,15 +35,37 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
+  public ngAfterViewInit(): void {
+    hljs.initHighlightingOnLoad();
+  }
+
   public ngOnDestroy(): void {
     this.watcher.unwatch();
   }
 
-  public edit(item: Command) {
-    this.command = Object.assign({}, item);
+  public filter() {
+    const keyword = this.keyword.toLowerCase();
+    return this.commands.filter(o => o.name.toLowerCase().indexOf(keyword) > -1 && o.script.toLowerCase().indexOf(keyword) > -1);
+  }
+
+  public new_() {
+    this.command = {} as Command;
+  }
+
+  public edit(value: Command) {
+    this.command = { ...value };
   }
 
   public onSubmit() {
-
+    const command: Command = this.commands.find(o => o.id === this.command.id);
+    if (!command) {
+      this.commands.push(command);
+    } else {
+      command.name = this.command.name;
+      command.script = this.command.script;
+      command.voice = this.command.voice;
+      command.updatedAt = new Date();
+    }
+    this.commandService.saveCommands(this.commands);
   }
 }

@@ -1,5 +1,5 @@
-<header>
-  <nav class="navbar navbar-light bg-light">
+<header class="sticky-top">
+  <nav class="navbar navbar-light bg-primary">
     <a class="navbar-brand" href="#">
       <img src="/assets/script.svg" width="30" height="30" class="d-inline-block align-top" alt=""> Script Trigger
     </a>
@@ -10,7 +10,7 @@
             <span class="oi oi-magnifying-glass text-muted"></span>
           </div>
         </div>
-        <input class="form-control" type="search" placeholder="Search">
+        <input [(ngModel)]="keyword" class="form-control" type="search" placeholder="Search">
       </div>
     </div>
   </nav>
@@ -18,34 +18,39 @@
 
 <main>
   <div class="fluid-container">
-    <div class="list-group">
-      <a *ngFor="let item of commands" (click)="edit(item)" href="#" data-toggle="modal" data-target="#exampleModal" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="list-group list-group-flush">
+      <a *ngFor="let command of filter()" (click)="edit(command)" href="#" data-toggle="modal" data-target="#commandModal" class="list-group-item list-group-item-action flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1 text-primary">{{item.name}}</h5>
-          <small>{{item.createdAt | amTimeAgo}}</small>
+          <h5 class="mb-1 text-primary">{{command.id}}. {{command.name}}</h5>
+          <small *ngIf="command.lastRunAt">{{command.lastRunAt | amTimeAgo}}</small>
         </div>
-        <p class="mb-1">{{item.script}}</p>
-        <small class="text-muted">{{item.voice}}</small>
+        <pre class="mb-1"><code class="powershell">{{command.script}}</code></pre>
+        <small class="text-muted regex">{{command.voice}}</small>
       </a>
     </div>
   </div>
 
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <form (ngSubmit)="onSubmit()" #modalForm="ngForm" class="was-validated">
+  <button type="button" class="btn btn-primary fab" (click)="new_(); commandForm.form.reset();" data-toggle="modal" data-target="#commandModal"><span class="oi oi-plus"></span></button>
+
+  <div class="modal fade" id="commandModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <form (ngSubmit)="commandForm.form.markAsDirty() && commandForm.form.valid && onSubmit() && commandModal.modal('hide')" #commandForm="ngForm">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">{{command.name}}</h5>
+            <h5 class="modal-title">{{command.name}}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
+            <!-- <app-field id="name" class="form-group row" label="Name" [form]="commandForm.form" [model]="command.name" [required]="true" ></app-field>
+            <app-field id="script" class="form-group row" label="Script" [form]="commandForm.form" [model]="command.script" [required]="true" ></app-field>
+            <app-field id="voice" class="form-group row" label="Voice" [form]="commandForm.form" [model]="command.voice" [required]="false" ></app-field> -->
             <div class="form-group row">
               <label for="inputName" class="col-sm-2 col-form-label">Name</label>
               <div class="col-sm-10">
-                <input [(ngModel)]="command.name" type="text" class="form-control" id="inputname" name="inputName" #name="ngModel" required>
-                <div [hidden]="name.valid || name.pristine" class="invalid-feedback">
+                <input [(ngModel)]="command.name" [ngClass]="{'is-valid': name.valid && !(commandForm.form.pristine && name.pristine), 'is-invalid': !name.valid && !(commandForm.form.pristine && name.pristine)}" type="text" class="form-control" id="inputname" name="inputName" #name="ngModel" required>
+                <div [hidden]="name.valid || (commandForm.form.pristine && name.pristine)" class="invalid-feedback">
                   Name is required
                 </div>
               </div>
@@ -53,12 +58,14 @@
             <div class="form-group row">
               <label for="inputCommand" class="col-sm-2 col-form-label">Script</label>
               <div class="col-sm-10">
-                <textarea [(ngModel)]="command.script" class="form-control" id="inputScript" name="inputScript" #script="ngModel" required rows="3"></textarea>
+                <textarea [(ngModel)]="command.script" class="form-control" id="inputScript" name="inputScript" #script="ngModel" required rows="2"></textarea>
                 <div [hidden]="script.valid || script.pristine" class="invalid-feedback">
                   Script is required
                 </div>
                 <small class="form-text">
-                  <a href="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg" class="text-muted">Powershell syntax</a>
+                  <a href="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg" class="text-muted">
+                    Powershell syntax <span class="oi oi-external-link small"></span>
+                  </a>
                 </small>
               </div>
             </div>
@@ -67,14 +74,28 @@
               <div class="col-sm-10">
                 <input [(ngModel)]="command.voice" type="text" class="form-control" id="inputVoice" name="inputVoice">
                 <small class="form-text">
-                  <a href="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf" class="text-muted">Regular Expressions syntax</a>
+                  <a href="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf" class="text-muted">
+                    Regular Expressions syntax <span class="oi oi-external-link small"></span>
+                  </a>
                 </small>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Updated</label>
+              <div class="col-sm-10">
+                <label class="form-control-plaintext">{{command.updatedAt | amTimeAgo}}</label>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Created</label>
+              <div class="col-sm-10">
+                <label class="form-control-plaintext">{{command.createdAt | amTimeAgo}}</label>
               </div>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" [disabled]="!modalForm.form.valid">Save</button>
+            <button type="submit" class="btn btn-primary">Save</button>
           </div>
         </div>
       </form>

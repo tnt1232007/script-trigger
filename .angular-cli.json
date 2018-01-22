@@ -23,9 +23,12 @@
       "styles": [
         "../node_modules/bootstrap/scss/bootstrap.scss",
         "../node_modules/open-iconic/font/css/open-iconic-bootstrap.scss",
+        "../node_modules/highlight.js/styles/default.css",
         "styles.scss"
       ],
       "scripts": [
+        "../node_modules/highlight.js/lib/highlight.js",
+        "../node_modules/highlight.js/lib/languages/powershell.js",
         "native.js"
       ],
       "environmentSource": "environments/environment.ts",
