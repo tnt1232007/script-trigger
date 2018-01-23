@@ -9,10 +9,10 @@ import { Command } from './_models/command';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  private keyword = '';
   private watcher: any;
   private commands: Command[];
-  private command: Command = {} as Command;
+  public keyword = '';
+  public command: Command = {} as Command;
 
   constructor(public commandService: CommandService) { }
 
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
           const lastLine = lines.slice(-1)[0];
 
           const commands = this.commandService.extractCommands(lastLine);
-          this.commandService.runCommands(commands);
+          this.commandService.runCommands(...commands);
         }
       });
     });
@@ -38,23 +38,52 @@ export class AppComponent implements OnInit, OnDestroy {
     this.watcher.unwatch();
   }
 
-  public filter() {
+  public filteredCommands(): Command[] {
+    if (!this.keyword)
+      return this.commands;
     const keyword = this.keyword.toLowerCase();
     return this.commands.filter(o => o.name.toLowerCase().indexOf(keyword) > -1 && o.script.toLowerCase().indexOf(keyword) > -1);
   }
 
-  public new_() {
+  public onNew(): void {
     this.command = {} as Command;
   }
 
-  public edit(value: Command) {
-    this.command = { ...value };
+  public onEdit(command: Command): void {
+    this.command = { ...command };
   }
 
-  public onSubmit() {
+  public trigger(command: Command): void {
+    this.commandService.runCommands(command);
+    command.lastRunAt = new Date();
+    command.runs = command.runs ? command.runs + 1 : 1;
+    this.commandService.saveCommands(this.commands);
+  }
+
+  public reset(command?: Command): void {
+    command = command ? command : this.command;
+    command.lastRunAt = null;
+    command.runs = 0;
+    command = this.commands.find(o => o.id === command.id);
+    command.lastRunAt = null;
+    command.runs = 0;
+    this.commandService.saveCommands(this.commands);
+  }
+
+  public delete(command?: Command): void {
+    const index: number = this.commands.findIndex(o => o.id === (command ? command.id : this.command.id));
+    this.commands.splice(index, 1);
+    this.commandService.saveCommands(this.commands);
+  }
+
+  public submit(): void {
     const command: Command = this.commands.find(o => o.id === this.command.id);
     if (!command) {
-      this.commands.push(command);
+      this.command.id = this.commands.length + 1;
+      this.command.createdAt = new Date();
+      this.command.updatedAt = new Date();
+      this.command.runs = 0;
+      this.commands.push(this.command);
     } else {
       command.name = this.command.name;
       command.script = this.command.script;
@@ -62,5 +91,12 @@ export class AppComponent implements OnInit, OnDestroy {
       command.updatedAt = new Date();
     }
     this.commandService.saveCommands(this.commands);
+  }
+
+  public resetAllStats(): void {
+    this.commands.forEach(command => {
+      command.lastRunAt = null;
+      command.runs = 0;
+    });
   }
 }

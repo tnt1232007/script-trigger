@@ -1,16 +1,20 @@
 <header class="sticky-top">
-  <nav class="navbar navbar-light bg-primary">
-    <a class="navbar-brand" href="#">
+  <nav class="navbar navbar-dark bg-primary">
+    <a class="navbar-brand" href="#" draggable="false">
       <img src="/assets/script.svg" width="30" height="30" class="d-inline-block align-top" alt=""> Script Trigger
     </a>
     <div class="form-inline ml-auto">
+      <button type="button" class="btn btn-outline-light mr-2" (click)="onNew(); commandForm.form.reset();" data-toggle="modal" data-target="#commandModal">New</button>
       <div class="input-group">
         <div class="input-group-prepend">
           <div class="input-group-text">
-            <span class="oi oi-magnifying-glass text-muted"></span>
+            <svg id="i-search" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round"stroke-width="3">
+              <circle cx="14" cy="14" r="12" />
+              <path d="M23 23 L30 30" />
+            </svg>
           </div>
         </div>
-        <input [(ngModel)]="keyword" class="form-control" type="search" placeholder="Search">
+        <input [(ngModel)]="keyword" class="form-control" type="search" placeholder="Filter">
       </div>
     </div>
   </nav>
@@ -19,38 +23,45 @@
 <main>
   <div class="fluid-container">
     <div class="list-group list-group-flush">
-      <a *ngFor="let command of filter()" (click)="edit(command)" href="#" data-toggle="modal" data-target="#commandModal" class="list-group-item list-group-item-action flex-column align-items-start">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1 text-primary">{{command.id}}. {{command.name}}</h5>
-          <small *ngIf="command.lastRunAt">{{command.lastRunAt | amTimeAgo}}</small>
+      <div *ngFor="let command of filteredCommands()" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100">
+          <h5 class="text-primary clickable" (click)="onEdit(command)" data-toggle="modal" data-target="#commandModal">
+            {{command.id}}.
+            <a draggable="false">{{command.name}}</a>
+            <svg id="i-edit" viewBox="0 0 32 32" width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+              <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
+            </svg>
+          </h5>
+          <small class="ml-auto" *ngIf="command.lastRunAt">{{command.lastRunAt | amTimeAgo}}</small>
         </div>
-        <pre class="my-1"><code highlight [code]="command.script"></code></pre>
-        <small class="text-muted regex">{{command.voice}}</small>
-      </a>
+        <div class="d-flex w-100 justify-content-between align-items-center">
+          <pre class="my-1 mr-3"><code highlight [code]="command.script"></code></pre>
+          <div class="btn-group">
+            <button type="button" class="btn btn-danger" (click)="trigger(command)">Trigger <span class="badge badge-light">{{command.runs}}</span></button>
+          </div>
+        </div>
+        <small class="text-muted regex">{{command.voice}}&nbsp;</small>
+      </div>
     </div>
   </div>
-
-  <button type="button" class="btn btn-primary fab" (click)="new_(); commandForm.form.reset();" data-toggle="modal" data-target="#commandModal"><span class="oi oi-plus"></span></button>
 
   <div class="modal fade" id="commandModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <form #commandForm="ngForm">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">{{command.name}}</h5>
+            <h5 class="modal-title">{{command.id ? 'Edit' : 'New'}}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <!-- <app-field id="name" class="form-group row" label="Name" [form]="commandForm.form" [model]="command.name" [required]="true" ></app-field>
-            <app-field id="script" class="form-group row" label="Script" [form]="commandForm.form" [model]="command.script" [required]="true" ></app-field>
-            <app-field id="voice" class="form-group row" label="Voice" [form]="commandForm.form" [model]="command.voice" [required]="false" ></app-field> -->
             <div class="form-group row">
               <label for="inputName" class="col-sm-2 col-form-label">Name</label>
               <div class="col-sm-10">
-                <input [(ngModel)]="command.name" [ngClass]="{'is-valid': name.valid && !(commandForm.form.pristine && name.pristine), 'is-invalid': !name.valid && !(commandForm.form.pristine && name.pristine)}" type="text" class="form-control" id="inputname" name="inputName" #name="ngModel" required>
-                <div [hidden]="name.valid || (commandForm.form.pristine && name.pristine)" class="invalid-feedback">
+                <input [(ngModel)]="command.name" [ngClass]="{'is-valid': name.valid && !name.pristine, 'is-invalid': !name.valid && !name.pristine}"
+                  type="text" class="form-control" id="inputname" name="inputName" #name="ngModel" required>
+                <div [hidden]="name.valid || name.pristine" class="invalid-feedback">
                   Name is required
                 </div>
               </div>
@@ -58,13 +69,17 @@
             <div class="form-group row">
               <label for="inputCommand" class="col-sm-2 col-form-label">Script</label>
               <div class="col-sm-10">
-                <textarea [(ngModel)]="command.script" class="form-control" id="inputScript" name="inputScript" #script="ngModel" required rows="2"></textarea>
+                <textarea [(ngModel)]="command.script" [ngClass]="{'is-valid': script.valid && !script.pristine, 'is-invalid': !script.valid && !script.pristine}"
+                  class="form-control" id="inputScript" name="inputScript" #script="ngModel" rows="1" required></textarea>
                 <div [hidden]="script.valid || script.pristine" class="invalid-feedback">
                   Script is required
                 </div>
                 <small class="form-text">
                   <a href="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg" class="text-muted">
-                    Powershell syntax <span class="oi oi-external-link small"></span>
+                    Powershell syntax
+                    <svg id="i-external" viewBox="0 0 32 32" width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                      <path d="M14 9 L3 9 3 29 23 29 23 18 M18 4 L28 4 28 14 M28 4 L14 18" />
+                    </svg>
                   </a>
                 </small>
               </div>
@@ -72,30 +87,50 @@
             <div class="form-group row">
               <label for="inputVoice" class="col-sm-2 col-form-label">Voice</label>
               <div class="col-sm-10">
-                <input [(ngModel)]="command.voice" type="text" class="form-control" id="inputVoice" name="inputVoice">
+                <input [(ngModel)]="command.voice" [ngClass]="{'is-valid': voice.valid && !voice.pristine, 'is-invalid': !voice.valid && !voice.pristine}"
+                  type="text" class="form-control" id="inputVoice" name="inputVoice" #voice="ngModel">
                 <small class="form-text">
                   <a href="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf" class="text-muted">
-                    Regular Expressions syntax <span class="oi oi-external-link small"></span>
+                    Regular Expressions syntax
+                    <svg id="i-external" viewBox="0 0 32 32" width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                      <path d="M14 9 L3 9 3 29 23 29 23 18 M18 4 L28 4 28 14 M28 4 L14 18" />
+                    </svg>
                   </a>
                 </small>
               </div>
             </div>
-            <div class="form-group row">
-              <label class="col-sm-2 col-form-label">Updated</label>
-              <div class="col-sm-10">
-                <label class="form-control-plaintext">{{command.updatedAt | amTimeAgo}}</label>
+            <ng-container *ngIf="command.id">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Runs</label>
+                <div class="col-sm-10">
+                  <label class="form-control-plaintext">{{command.runs}}</label>
+                </div>
               </div>
-            </div>
-            <div class="form-group row">
-              <label class="col-sm-2 col-form-label">Created</label>
-              <div class="col-sm-10">
-                <label class="form-control-plaintext">{{command.createdAt | amTimeAgo}}</label>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Last run</label>
+                <div class="col-sm-10">
+                  <label *ngIf="command.lastRunAt" class="form-control-plaintext">{{command.lastRunAt | amCalendar}}</label>
+                </div>
               </div>
-            </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Updated</label>
+                <div class="col-sm-10">
+                  <label class="form-control-plaintext">{{command.updatedAt | amCalendar}}</label>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Created</label>
+                <div class="col-sm-10">
+                  <label class="form-control-plaintext">{{command.createdAt | amCalendar}}</label>
+                </div>
+              </div>
+            </ng-container>
           </div>
           <div class="modal-footer">
+            <button *ngIf="command.id" type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete()">Delete</button>
+            <button *ngIf="command.id" type="button" class="btn btn-warning mr-auto" (click)="reset()">Reset Runs Statistics</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="commandForm.form.markAsDirty() && commandForm.form.valid && onSubmit()">Save</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="commandForm.form.valid && submit()">Save</button>
           </div>
         </div>
       </form>

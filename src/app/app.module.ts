@@ -7,12 +7,10 @@ import { HighlightModule } from 'ngx-highlightjs';
 
 import { AppComponent } from './app.component';
 import { CommandService } from './_services/command.service';
-import { FieldComponent } from './_partials/field.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    FieldComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

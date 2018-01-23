@@ -8,13 +8,12 @@ let win;
 let tray;
 
 const createWindow = () => {
-  // set timeout to render the window not until the Angular 
-  // compiler is ready to show the project
+  // set timeout to render the window not until the Angular compiler is ready to show the project
   setTimeout(() => {
     win = new BrowserWindow({
       width: 1280,
       height: 720,
-      icon: './src/favicon.ico'
+      icon: path.join(__dirname, 'favicon.ico'),
     });
 
     win.loadURL(url.format({
@@ -23,7 +22,7 @@ const createWindow = () => {
       slashes: true
     }));
 
-    tray = new Tray('./src/favicon.ico');
+    tray = new Tray(path.join(__dirname, 'favicon.ico'));
     tray.setToolTip('Script Trigger')
     tray.on('double-click', () => win.show());
     var contextMenu = Menu.buildFromTemplate([
@@ -43,12 +42,12 @@ const createWindow = () => {
     });
 
     var handleRedirect = (e, url) => {
-      if(url != win.webContents.getURL()) {
+      if (url != win.webContents.getURL()) {
         e.preventDefault()
         shell.openExternal(url)
       }
     }
-    
+
     win.webContents.on('will-navigate', handleRedirect)
     win.webContents.on('new-window', handleRedirect)
   }, 10000);

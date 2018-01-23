@@ -30,7 +30,7 @@ export class CommandService {
     return commands;
   }
 
-  public runCommands(commands: Command[]): void {
+  public runCommands(...commands: Command[]): void {
     const consoles = [ console.log, console.warn ];
     console.log = function(){};
     console.warn = function(){};

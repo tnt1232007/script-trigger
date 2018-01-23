@@ -1,1 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+$primary: #2aa198;
+$secondary: #657b83;
+$warning: #b58900;
+$danger: #dc322f;
+
+@import "node_modules/bootstrap/scss/bootstrap";
