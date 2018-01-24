@@ -8,7 +8,7 @@
       <div class="input-group">
         <div class="input-group-prepend">
           <div class="input-group-text">
-            <svg id="i-search" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round"stroke-width="3">
+            <svg id="i-search" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
               <circle cx="14" cy="14" r="12" />
               <path d="M23 23 L30 30" />
             </svg>
@@ -28,21 +28,31 @@
           <h5 class="text-primary clickable" (click)="onEdit(command)" data-toggle="modal" data-target="#commandModal">
             {{command.id}}.
             <a draggable="false">{{command.name}}</a>
-            <svg id="i-edit" viewBox="0 0 32 32" width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-              <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
-            </svg>
           </h5>
           <small class="ml-auto" *ngIf="command.lastRunAt">{{command.lastRunAt | amTimeAgo}}</small>
         </div>
-        <div class="d-flex w-100 justify-content-between align-items-center">
+        <div class="d-flex w-100 align-items-center">
           <pre class="my-1 mr-3"><code highlight [code]="command.script"></code></pre>
-          <div class="btn-group">
-            <button type="button" class="btn btn-danger" (click)="trigger(command)">Trigger <span class="badge badge-light">{{command.runs}}</span></button>
+          <button type="button" class="btn btn-light" (click)="onEdit(command)" data-toggle="modal" data-target="#commandModal" title="Edit">
+            <svg id="i-edit" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+              <path d="M30 7 L25 2 5 22 3 29 10 27 Z M21 6 L26 11 Z M5 22 L10 27 Z" />
+            </svg>
+          </button>
+          <button type="button" class="btn btn-light mr-3" (click)="onDuplicate(command)" data-toggle="modal" data-target="#commandModal" title="Duplicate">
+            <svg id="i-clipboard" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+              <path d="M12 2 L12 6 20 6 20 2 12 2 Z M11 4 L6 4 6 30 26 30 26 4 21 4" />
+            </svg>
+          </button>
+          <div class="btn-group ml-auto">
+            <button type="button" class="btn btn-danger" (click)="trigger(command)">Trigger
+              <span class="badge badge-light">{{command.runs}}</span>
+            </button>
           </div>
         </div>
         <small class="text-muted regex">{{command.voice}}&nbsp;</small>
       </div>
     </div>
+    <button type="button" class="btn btn-block btn-outline-danger border-0 rounded-0 py-4" mwlConfirmationPopover popoverTitle="Are you sure?" popoverMessage="Reset all Runs and Last run statistics" placement="top" (confirm)="resetAllStats()">Reset All Stats</button>
   </div>
 
   <div class="modal fade" id="commandModal" tabindex="-1">
@@ -75,7 +85,7 @@
                   Script is required
                 </div>
                 <small class="form-text">
-                  <a href="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg" class="text-muted">
+                  <a href="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg" title="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg" class="text-muted">
                     Powershell syntax
                     <svg id="i-external" viewBox="0 0 32 32" width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                       <path d="M14 9 L3 9 3 29 23 29 23 18 M18 4 L28 4 28 14 M28 4 L14 18" />
@@ -90,7 +100,7 @@
                 <input [(ngModel)]="command.voice" [ngClass]="{'is-valid': voice.valid && !voice.pristine, 'is-invalid': !voice.valid && !voice.pristine}"
                   type="text" class="form-control" id="inputVoice" name="inputVoice" #voice="ngModel">
                 <small class="form-text">
-                  <a href="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf" class="text-muted">
+                  <a href="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf" title="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf" class="text-muted">
                     Regular Expressions syntax
                     <svg id="i-external" viewBox="0 0 32 32" width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                       <path d="M14 9 L3 9 3 29 23 29 23 18 M18 4 L28 4 28 14 M28 4 L14 18" />
@@ -109,7 +119,7 @@
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Last run</label>
                 <div class="col-sm-10">
-                  <label *ngIf="command.lastRunAt" class="form-control-plaintext">{{command.lastRunAt | amCalendar}}</label>
+                  <label class="form-control-plaintext">{{command.lastRunAt ? (command.lastRunAt | amCalendar) : 'Not run yet'}}</label>
                 </div>
               </div>
               <div class="form-group row">
@@ -127,9 +137,8 @@
             </ng-container>
           </div>
           <div class="modal-footer">
-            <button *ngIf="command.id" type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete()">Delete</button>
-            <button *ngIf="command.id" type="button" class="btn btn-warning mr-auto" (click)="reset()">Reset Runs Statistics</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" mwlConfirmationPopover popoverTitle="Are you sure?" popoverMessage="Delete '{{command.name}}' permanently" placement="top" (confirm)="delete(); dismissBtn.click();" *ngIf="command.id">Delete</button>
+            <button type="button" class="btn btn-secondary ml-auto" data-dismiss="modal" #dismissBtn>Close</button>
             <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="commandForm.form.valid && submit()">Save</button>
           </div>
         </div>

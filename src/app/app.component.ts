@@ -49,31 +49,33 @@ export class AppComponent implements OnInit, OnDestroy {
     this.command = {} as Command;
   }
 
+  public onDuplicate(command: Command): void {
+    const regExp = new RegExp(`^${command.name} *\d*$`);
+    const count = this.commands.filter(o => regExp.test(o.name)).length;
+    this.command = {
+      name: `${command.name} ${count + 1}`,
+      script: command.script,
+      voice: command.voice
+    } as Command;
+  }
+
   public onEdit(command: Command): void {
     this.command = { ...command };
   }
 
   public trigger(command: Command): void {
-    this.commandService.runCommands(command);
-    command.lastRunAt = new Date();
-    command.runs = command.runs ? command.runs + 1 : 1;
-    this.commandService.saveCommands(this.commands);
-  }
-
-  public reset(command?: Command): void {
-    command = command ? command : this.command;
-    command.lastRunAt = null;
-    command.runs = 0;
-    command = this.commands.find(o => o.id === command.id);
-    command.lastRunAt = null;
-    command.runs = 0;
-    this.commandService.saveCommands(this.commands);
+    this.commandService.runCommands(command).subscribe(o => {
+      command.lastRunAt = new Date();
+      command.runs = command.runs ? command.runs + 1 : 1;
+      this.commandService.saveCommands(this.commands);
+    });
   }
 
   public delete(command?: Command): void {
     const index: number = this.commands.findIndex(o => o.id === (command ? command.id : this.command.id));
     this.commands.splice(index, 1);
-    this.commandService.saveCommands(this.commands);
+    if (environment.production)
+      this.commandService.saveCommands(this.commands);
   }
 
   public submit(): void {
@@ -98,5 +100,6 @@ export class AppComponent implements OnInit, OnDestroy {
       command.lastRunAt = null;
       command.runs = 0;
     });
+    this.commandService.saveCommands(this.commands);
   }
 }

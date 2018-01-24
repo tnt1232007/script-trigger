@@ -26,6 +26,7 @@
     "@angular/platform-browser": "^5.2.1",
     "@angular/platform-browser-dynamic": "^5.2.1",
     "@angular/router": "^5.2.1",
+    "angular-confirmation-popover": "^4.0.0",
     "angular2-moment": "^1.7.1",
     "bootstrap": "^4.0.0",
     "chokidar": "^2.0.0",

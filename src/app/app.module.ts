@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { MomentModule } from 'angular2-moment';
 import { HighlightModule } from 'ngx-highlightjs';
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 import { AppComponent } from './app.component';
 import { CommandService } from './_services/command.service';
@@ -18,7 +19,11 @@ import { CommandService } from './_services/command.service';
     MomentModule,
     HighlightModule.forRoot({
       theme: 'solarized-light'
-     })
+    }),
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'primary',
+      cancelButtonType: 'secondary'
+    })
   ],
   providers: [CommandService],
   bootstrap: [AppComponent]

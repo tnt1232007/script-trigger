@@ -1,3 +1,7 @@
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/operator/do';
+
 import { environment } from '../../environments/environment';
 import { Command } from '../_models/command';
 
@@ -13,7 +17,7 @@ export class CommandService {
   }
 
   public saveCommands(commands: Command[]): void {
-    window.jsonwrapper.writeFileSync(environment.dbPath, commands, {spaces: 2});
+    window.jsonwrapper.writeFileSync(environment.dbPath, commands, { spaces: 2 });
   }
 
   public extractCommands(voice: string): Command[] {
@@ -30,17 +34,18 @@ export class CommandService {
     return commands;
   }
 
-  public runCommands(...commands: Command[]): void {
-    const consoles = [ console.log, console.warn ];
-    console.log = function(){};
-    console.warn = function(){};
+  public runCommands(...commands: Command[]): Observable<any> {
+    const consoles = [console.log, console.warn];
+    console.log = function () { };
+    console.warn = function () { };
 
     const ps = new window.powershell();
     for (const cmd of commands) {
       ps.addCommand(cmd.script.format(...cmd.params) + ';');
     }
 
-    ps.invoke().then(o => {
+    const obs = Observable.fromPromise(ps.invoke());
+    return obs.do(o => {
       ps.dispose().then(m => {
         console.log = consoles[0];
         console.warn = consoles[1];
