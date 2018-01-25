@@ -1,0 +1,16 @@
+{
+  "name": "script-trigger",
+  "productName": "Script Trigger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "electron.prod.js",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "chokidar": "^2.0.0",
+    "jquery": "^3.3.1",
+    "jsonfile": "^4.0.0",
+    "node-powershell": "^3.3.1",
+    "popper.js": "^1.13.0"
+  }
+}

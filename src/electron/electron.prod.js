@@ -13,7 +13,6 @@ const createWindow = () => {
     height: 720,
     icon: path.join(__dirname, 'favicon.ico'),
   });
-  win.setMenu(null);
 
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),

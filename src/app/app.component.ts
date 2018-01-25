@@ -68,6 +68,8 @@ export class AppComponent implements OnInit, OnDestroy {
       command.lastRunAt = new Date();
       command.runs = command.runs ? command.runs + 1 : 1;
       this.commandService.saveCommands(this.commands);
+    }, err => {
+      console.error(err);
     });
   }
 

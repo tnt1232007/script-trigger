@@ -13,7 +13,7 @@ const createWindow = () => {
     win = new BrowserWindow({
       width: 1280,
       height: 720,
-      icon: path.join(__dirname, 'favicon.ico'),
+      icon: path.join(__dirname, '../favicon.ico'),
     });
 
     win.loadURL(url.format({
@@ -22,7 +22,7 @@ const createWindow = () => {
       slashes: true
     }));
 
-    tray = new Tray(path.join(__dirname, 'favicon.ico'));
+    tray = new Tray(path.join(__dirname, '../favicon.ico'));
     tray.setToolTip('Script Trigger')
     tray.on('double-click', () => win.show());
     var contextMenu = Menu.buildFromTemplate([

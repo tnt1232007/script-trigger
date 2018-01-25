@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/do';
 
 import { environment } from '../../environments/environment';
@@ -44,12 +45,16 @@ export class CommandService {
       ps.addCommand(cmd.script.format(...cmd.params) + ';');
     }
 
-    const obs = Observable.fromPromise(ps.invoke());
-    return obs.do(o => {
-      ps.dispose().then(m => {
+    const obs = Observable
+      .fromPromise(ps.invoke())
+      .mergeMap(val => ps.dispose())
+      .do(() => {
+        console.log = consoles[0];
+        console.warn = consoles[1];
+      }, () => {
         console.log = consoles[0];
         console.warn = consoles[1];
       });
-    });
+    return obs;
   }
 }
