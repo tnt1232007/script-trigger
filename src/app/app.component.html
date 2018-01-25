@@ -1,7 +1,7 @@
 <header class="sticky-top">
   <nav class="navbar navbar-dark bg-primary">
     <a class="navbar-brand" href="#" draggable="false">
-      <img src="assets/script.svg" width="30" height="30" class="d-inline-block align-top" alt=""> Script Trigger
+      <img src="assets/script.svg" width="30" height="30" class="d-inline-block align-top" alt=""> ScriptTrigger
     </a>
     <div class="form-inline ml-auto">
       <button type="button" class="btn btn-outline-light mr-2" (click)="onNew(); commandForm.form.reset(); commandModal.show();">New</button>
@@ -53,7 +53,7 @@
       itemClass="sortable-item list-group-item list-group-item-action flex-column align-items-start"></bs-sortable>
 
     <button type="button" class="btn btn-block btn-outline-danger border-0 rounded-0 py-4" mwlConfirmationPopover popoverTitle="Are you sure?"
-      popoverMessage="Reset all Runs and Last run statistics" placement="top" (confirm)="resetAllStats()">Reset All Stats</button>
+      popoverMessage="Reset all Runs and Last run statistics" placement="top" (confirm)="resetAllStats()">Reset Runs</button>
   </div>
 
   <div bsModal #commandModal="bs-modal" class="modal fade" tabindex="-1">

@@ -23,7 +23,7 @@ const createWindow = () => {
     }));
 
     tray = new Tray(path.join(__dirname, '../favicon.ico'));
-    tray.setToolTip('Script Trigger')
+    tray.setToolTip('ScriptTrigger')
     tray.on('double-click', () => win.show());
     var contextMenu = Menu.buildFromTemplate([
       { label: 'Show', click: () => win.show() },

@@ -10,10 +10,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "electron": "electron ./src/electron/electron.dev",
-    "electron-packager": "cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=win32 --arch=all --overwrite",
-    "package:win": "npm run build && npm --prefix ./dist install ./dist && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=win32 --arch=all --overwrite",
-    "package:linux": "npm run build && npm --prefix ./dist install ./dist && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=linux --arch=all --overwrite",
-    "package:mac": "npm run build && npm --prefix ./dist install ./dist && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=mac --arch=all --overwrite",
+    "package:win": "npm run build && npm --prefix ./dist install ./dist && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=dist/packages --platform=win32 --arch=all --overwrite=true",
+    "package:linux": "npm run build && npm --prefix ./dist install ./dist && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=dist/packages --platform=linux --arch=all --overwrite=true",
+    "package:mac": "npm run build && npm --prefix ./dist install ./dist && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=dist/packages --platform=mac --arch=all --overwrite=true",
     "publish": "npm run package:win"
   },
   "private": true,
