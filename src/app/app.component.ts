@@ -43,6 +43,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.watcher.unwatch();
   }
 
+  public isContainParams(voice: string) {
+    return voice.match(/\(\.\*\)/);
+  }
+
   public filter(): void {
     if (!this.keyword) {
       this.commands = this.allCommands;
@@ -65,7 +69,8 @@ export class AppComponent implements OnInit, OnDestroy {
   //   this.command = {
   //     name: `${name} ${index}`,
   //     script: command.script,
-  //     voice: command.voice
+  //     voice: command.voice,
+  //     params: command.params
   //   } as Command;
   // }
 
@@ -102,6 +107,7 @@ export class AppComponent implements OnInit, OnDestroy {
       command.name = this.command.name;
       command.script = this.command.script;
       command.voice = this.command.voice;
+      command.params = this.command.params;
       command.updatedAt = new Date();
     }
     this.commandService.saveCommands(this.commands);

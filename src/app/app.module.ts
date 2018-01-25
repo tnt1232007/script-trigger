@@ -8,6 +8,7 @@ import { SortableModule } from 'ngx-bootstrap/sortable';
 import { MomentModule } from 'angular2-moment';
 import { HighlightModule } from 'ngx-highlightjs';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
+import { ElasticModule } from 'angular2-elastic';
 
 import { ByteSizeIconComponent } from './nested-components/bytesize-icon/bytesize-icon.component';
 import { AppComponent } from './app.component';
@@ -22,6 +23,7 @@ import { CommandService } from './_services/command.service';
     BrowserModule,
     FormsModule,
     MomentModule,
+    ElasticModule,
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
     SortableModule.forRoot(),

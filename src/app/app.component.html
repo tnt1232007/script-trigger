@@ -29,14 +29,15 @@
       </div>
       <div class="d-flex w-100 align-items-center">
         <pre class="my-1 mr-3"><code highlight [code]="item.value.script"></code></pre>
-        <button type="button" class="btn btn-light showOnHover text-hover-warning" (click)="onEdit(item.value); commandModal.show();" tooltip="Edit">
+        <button type="button" tooltip="Edit" class="btn btn-light rounded-0 showOnHover text-muted text-hover-warning" (click)="onEdit(item.value); commandModal.show();">
           <app-bytesize-icon id="i-edit"></app-bytesize-icon>
         </button>
-        <!-- <button type="button" class="btn btn-light showOnHover" (click)="onDuplicate(item.value); commandModal.show();" tooltip="Duplicate">
+        <!-- <button type="button" class="btn btn-light rounded-0 showOnHover text-muted" (click)="onDuplicate(item.value); commandModal.show();" tooltip="Duplicate">
           <app-bytesize-icon id="i-clipboard"></app-bytesize-icon>
         </button> -->
-        <button type="button" class="btn btn-light showOnHover text-hover-danger mr-3" tooltip="Delete" mwlConfirmationPopover popoverTitle="Are you sure?" popoverMessage="Delete '{{item.value.name}}' permanently"
-          placement="{{item.value.id === 1 ? 'bottom' : 'top'}}" (confirm)="delete(item.value)">
+        <button type="button" tooltip="Delete" class="btn btn-light rounded-0 showOnHover text-muted text-hover-danger mr-3" mwlConfirmationPopover
+          popoverTitle="Are you sure?" popoverMessage="Delete '{{item.value.name}}' permanently" placement="{{item.value.id === 1 ? 'bottom' : 'top'}}"
+          (confirm)="delete(item.value)">
           <app-bytesize-icon id="i-trash"></app-bytesize-icon>
         </button>
         <div class="btn-group ml-auto">
@@ -79,13 +80,14 @@
             <div class="form-group row">
               <label for="inputCommand" class="col-sm-2 col-form-label">Script</label>
               <div class="col-sm-10">
-                <textarea [(ngModel)]="command.script" [ngClass]="{'is-valid': script.valid && !script.pristine, 'is-invalid': !script.valid && !script.pristine}"
+                <textarea fz-elastic [(ngModel)]="command.script" [ngClass]="{'is-valid': script.valid && !script.pristine, 'is-invalid': !script.valid && !script.pristine}"
                   class="form-control" id="inputScript" name="inputScript" #script="ngModel" rows="1" required></textarea>
                 <div [hidden]="script.valid || script.pristine" class="invalid-feedback">
                   Script is required
                 </div>
                 <small class="form-text">
-                  <a class="text-muted" placement="bottom" href="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg" tooltip="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg">
+                  <a class="text-muted" placement="bottom" tabindex="-1" href="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg"
+                    tooltip="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg">
                     Powershell syntax
                     <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
                   </a>
@@ -96,9 +98,9 @@
               <label for="inputVoice" class="col-sm-2 col-form-label">Voice</label>
               <div class="col-sm-10">
                 <input [(ngModel)]="command.voice" [ngClass]="{'is-valid': voice.valid && !voice.pristine, 'is-invalid': !voice.valid && !voice.pristine}"
-                  type="text" class="form-control" id="inputVoice" name="inputVoice" #voice="ngModel">
+                  type="text" class="form-control" name="inputVoice" id="inputVoice" #voice="ngModel">
                 <small class="form-text">
-                  <a class="text-muted" placement="bottom" href="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf"
+                  <a class="text-muted" placement="bottom" tabindex="-1" href="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf"
                     tooltip="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf">
                     Regular Expressions syntax
                     <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
@@ -106,6 +108,16 @@
                 </small>
               </div>
             </div>
+            <ng-container *ngIf="command.voice && isContainParams(command.voice)">
+              <div class="form-group row">
+                <label for="inputParams" class="col-sm-2 col-form-label">Parameters</label>
+                <div class="col-sm-10">
+                  <input [(ngModel)]="command.params" [ngClass]="{'is-valid': params.valid && !params.pristine, 'is-invalid': !params.valid && !params.pristine}"
+                    type="text" class="form-control" name="inputParams" id="inputParams" #params="ngModel">
+                  <small class="form-text text-muted">Comma-separated value params for each (.*) in voice command</small>
+                </div>
+              </div>
+            </ng-container>
             <ng-container *ngIf="command.id">
               <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Runs</label>

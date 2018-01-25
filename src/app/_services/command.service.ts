@@ -28,7 +28,7 @@ export class CommandService {
       const reg = new RegExp(cmd.voice);
       const matches = reg.exec(voice);
       if (matches) {
-        cmd.params = matches.slice(1);
+        cmd.params = matches.slice(1).join(',');
         commands.push(cmd);
       }
     }
@@ -42,7 +42,7 @@ export class CommandService {
 
     const ps = new window.powershell();
     for (const cmd of commands) {
-      ps.addCommand(cmd.script.format(...cmd.params) + ';');
+      ps.addCommand(cmd.script.format(...cmd.params.split(',')) + ';');
     }
 
     const obs = Observable
