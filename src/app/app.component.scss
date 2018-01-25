@@ -6,10 +6,18 @@ a {
   outline: none;
 }
 
-.list-group-item {
-  outline: none;
-}
-
 .clickable {
   cursor: pointer;
+}
+
+bs-sortable /deep/ .list-group {
+  /deep/ .list-group-item {
+    .showOnHover {
+      visibility: hidden;
+    }
+  
+    &:hover .showOnHover {
+      visibility: inherit;
+    }
+  }
 }

@@ -4,3 +4,15 @@ $warning: #b58900;
 $danger: #dc322f;
 
 @import "node_modules/bootstrap/scss/bootstrap";
+
+@mixin text-hover-variant($parent, $color) {
+  #{$parent} {
+    @include hover-focus {
+      color: $color !important;
+    }
+  }
+}
+
+@each $color, $value in $theme-colors {
+  @include text-hover-variant(".text-hover-#{$color}", $value);
+}

@@ -1,4 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { SortableComponent } from 'ngx-bootstrap/sortable';
+
 import { environment } from '../environments/environment';
 import { CommandService } from './_services/command.service';
 import { Command } from './_models/command';
@@ -10,14 +12,17 @@ import { Command } from './_models/command';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private watcher: any;
-  private commands: Command[];
   public keyword = '';
   public command: Command = {} as Command;
+  public commands: Command[];
+  public allCommands: Command[];
+
+  @ViewChild(SortableComponent) sortableComponent: SortableComponent;
 
   constructor(public commandService: CommandService) { }
 
   public ngOnInit(): void {
-    this.commands = this.commandService.loadCommands();
+    this.allCommands = this.commands = this.commandService.loadCommands();
 
     this.watcher = window.fswrapper.watch(environment.watchPath, { awaitWriteFinish: true }).on('change', (path, stats) => {
       window.fs.readFile(path, 'utf8', (err_, data) => {
@@ -38,26 +43,31 @@ export class AppComponent implements OnInit, OnDestroy {
     this.watcher.unwatch();
   }
 
-  public filteredCommands(): Command[] {
-    if (!this.keyword)
-      return this.commands;
-    const keyword = this.keyword.toLowerCase();
-    return this.commands.filter(o => o.name.toLowerCase().indexOf(keyword) > -1 && o.script.toLowerCase().indexOf(keyword) > -1);
+  public filter(): void {
+    if (!this.keyword) {
+      this.commands = this.allCommands;
+    } else {
+      const keyword = this.keyword.toLowerCase();
+      this.commands = this.allCommands
+        .filter(o => o.name.toLowerCase().indexOf(keyword) > -1 || o.script.toLowerCase().indexOf(keyword) > -1);
+    }
   }
 
   public onNew(): void {
     this.command = {} as Command;
   }
 
-  public onDuplicate(command: Command): void {
-    const regExp = new RegExp(`^${command.name} *\d*$`);
-    const count = this.commands.filter(o => regExp.test(o.name)).length;
-    this.command = {
-      name: `${command.name} ${count + 1}`,
-      script: command.script,
-      voice: command.voice
-    } as Command;
-  }
+  // public onDuplicate(command: Command): void {
+  //   const name = command.name.replace(/[0-9]+$/g, '').trim();
+  //   let index = 2;
+  //   while (this.commands.some(o => o.name === `${name} ${index}`))
+  //     index += 1;
+  //   this.command = {
+  //     name: `${name} ${index}`,
+  //     script: command.script,
+  //     voice: command.voice
+  //   } as Command;
+  // }
 
   public onEdit(command: Command): void {
     this.command = { ...command };
@@ -76,8 +86,8 @@ export class AppComponent implements OnInit, OnDestroy {
   public delete(command?: Command): void {
     const index: number = this.commands.findIndex(o => o.id === (command ? command.id : this.command.id));
     this.commands.splice(index, 1);
-    if (environment.production)
-      this.commandService.saveCommands(this.commands);
+    this.commandService.saveCommands(this.commands);
+    this.sortableComponent.writeValue(this.commands);
   }
 
   public submit(): void {
@@ -94,6 +104,11 @@ export class AppComponent implements OnInit, OnDestroy {
       command.voice = this.command.voice;
       command.updatedAt = new Date();
     }
+    this.commandService.saveCommands(this.commands);
+    this.sortableComponent.writeValue(this.commands);
+  }
+
+  public afterSort(): void {
     this.commandService.saveCommands(this.commands);
   }
 
