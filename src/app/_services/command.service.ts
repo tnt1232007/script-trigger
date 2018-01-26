@@ -1,16 +1,22 @@
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/do';
 
 import { environment } from '../../environments/environment';
+import { StoreService } from './store.service';
 import { Command } from '../_models/command';
 
+@Injectable()
 export class CommandService {
-  constructor() { }
+  constructor(private storeService: StoreService) { }
 
   public loadCommands(): Command[] {
-    const commands: Command[] = window.jsonwrapper.readFileSync(environment.dbPath);
+    const path = this.storeService.getDatabaseFilePath();
+    if (!window.fs.existsSync(path))
+      return [];
+    const commands: Command[] = window.jsonwrapper.readFileSync(path);
     commands.forEach((command, index) => {
       command.id = index + 1;
     });
@@ -18,7 +24,7 @@ export class CommandService {
   }
 
   public saveCommands(commands: Command[]): void {
-    window.jsonwrapper.writeFileSync(environment.dbPath, commands, { spaces: 2 });
+    window.jsonwrapper.writeFileSync(this.storeService.getDatabaseFilePath(), commands, { spaces: 2 });
   }
 
   public extractCommands(voice: string): Command[] {
@@ -42,7 +48,7 @@ export class CommandService {
 
     const ps = new window.powershell();
     for (const cmd of commands) {
-      ps.addCommand(cmd.script.format(...cmd.params.split(',')) + ';');
+      ps.addCommand(cmd.script.format(...cmd.params ? cmd.params.split(',') : []) + ';');
     }
 
     const obs = Observable

@@ -4,8 +4,8 @@
       <img src="assets/script.svg" width="30" height="30" class="d-inline-block align-top" alt=""> ScriptTrigger
     </a>
     <div class="form-inline ml-auto">
-      <button type="button" class="btn btn-outline-light mr-2" (click)="onNew(); commandForm.form.reset(); commandModal.show();">New</button>
-      <div class="input-group">
+      <button type="button" class="btn btn-outline-light mr-2" (click)="onNew(); commandForm.form.reset(); commandModal.show();">New Command</button>
+      <div class="input-group mr-2">
         <div class="input-group-prepend">
           <div class="input-group-text">
             <app-bytesize-icon id="i-search"></app-bytesize-icon>
@@ -13,6 +13,9 @@
         </div>
         <input [(ngModel)]="keyword" (ngModelChange)="filter()" class="form-control" type="search" placeholder="Filter">
       </div>
+      <button type="button" class="btn btn-outline-light pb-0" (click)="configModal.show();">
+        <app-bytesize-icon id="i-settings" size="22" stroke="2"></app-bytesize-icon>
+      </button>
     </div>
   </nav>
 </header>
@@ -150,6 +153,56 @@
               placement="top" (confirm)="delete(); commandModal.hide();" *ngIf="command.id">Delete</button>
             <button type="button" class="btn btn-secondary ml-auto" (click)="commandModal.hide()">Close</button>
             <button type="button" class="btn btn-primary" (click)="commandForm.form.valid && submit(); commandModal.hide();">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div bsModal #configModal="bs-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <form #configForm="ngForm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Configuration</h5>
+            <button type="button" class="close" (click)="configModal.hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label for="inputWatchLocation" class="col-sm-3 col-form-label">Watch Location</label>
+              <div class="col-sm-9">
+                <!-- <div class="custom-file">
+                  <input type="file" webkitdirectory class="custom-file-input" id="inputWatchLocation" name="inputWatchLocation">
+                  <label class="custom-file-label" for="inputWatchLocation">Choose folder</label>
+                </div> -->
+                <input [(ngModel)]="configuration.watchLocation" type="text" class="form-control" id="inputWatchLocation" name="inputWatchLocation">
+                <small class="form-text text-muted">Activate command by voice, file name default to computer name:
+                  <a class="text-muted"  placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getWatchFilePath())" [tooltip]="storeService.getWatchFilePath()">
+                    {{storeService.getWatchFileName()}}
+                    <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
+                  </a>
+                </small>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputDatabaseLocation" class="col-sm-3 col-form-label">Database Location</label>
+              <div class="col-sm-9">
+                <input [(ngModel)]="configuration.databaseLocation" type="text" class="form-control" id="inputDatabaseLocation" name="inputDatabaseLocation">
+                <small class="form-text text-muted">
+                  Default to
+                  <a class="text-muted" placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getConfigLocation())" [tooltip]="storeService.getConfigLocation()">
+                    User AppData folder
+                    <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
+                  </a>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary ml-auto" (click)="configModal.hide()">Close</button>
+            <button type="button" class="btn btn-primary" (click)="configForm.form.valid && configFormSubmit(); configModal.hide();">Save</button>
           </div>
         </div>
       </form>

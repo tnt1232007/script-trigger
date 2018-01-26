@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Shutdown PC",
+    "voice": "(shutdown|turn off).*(pc|computer)",
+    "script": "shutdown /s /t 30 /c 'Shutdown by Script Trigger';",
+    "runs": 0,
+    "createdAt": "2018-01-22T07:13:06.632Z",
+    "id": 1,
+    "lastRunAt": null,
+    "updatedAt": "2018-01-22T15:03:12.292Z"
+  },
+  {
+    "name": "Restart PC",
+    "voice": "(restart).*(pc|computer)",
+    "script": "shutdown /r /t 30 /c 'Restart by Script Trigger';",
+    "runs": 0,
+    "createdAt": "2018-01-22T07:13:06.632Z",
+    "id": 2,
+    "lastRunAt": null,
+    "updatedAt": "2018-01-22T15:24:06.024Z"
+  },
+  {
+    "name": "Cancel Shutdown/Restart PC",
+    "script": "shutdown /a",
+    "voice": null,
+    "id": 3,
+    "lastRunAt": null,
+    "runs": 0,
+    "updatedAt": "2018-01-25T07:07:30.389Z"
+  },
+  {
+    "name": "Lock PC",
+    "voice": "(lock).*(pc|computer)",
+    "script": "rundll32.exe user32.dll,LockWorkStation;",
+    "runs": 0,
+    "createdAt": "2018-01-22T07:13:06.632Z",
+    "id": 4,
+    "lastRunAt": null,
+    "updatedAt": "2018-01-22T15:25:18.518Z"
+  },
+  {
+    "name": "Sleep PC",
+    "voice": "(sleep).*(pc|computer)",
+    "script": "rundll32.exe powrprof.dll,SetSuspendState Sleep;",
+    "runs": 0,
+    "createdAt": "2018-01-22T07:13:06.632Z",
+    "id": 5,
+    "lastRunAt": null,
+    "updatedAt": "2018-01-22T16:15:44.351Z"
+  },
+  {
+    "name": "Set Volume PC",
+    "voice": "volume to (.*)",
+    "script": "$obj = New-Object -com wscript.shell;\n$down = 100/2; $up = {0}/2;\n1..$down | % {$obj.SendKeys([char]174)};\n1..$up | % {$obj.SendKeys([char]175)};",
+    "runs": 0,
+    "createdAt": "2018-01-22T07:13:06.632Z",
+    "id": 6,
+    "lastRunAt": null,
+    "updatedAt": "2018-01-25T09:34:29.304Z",
+    "params": "40"
+  },
+  {
+    "name": "Volume Up PC",
+    "voice": "(increase volume|volume up)",
+    "script": "$obj = new-object -com wscript.shell;\n1..5 | % {$obj.SendKeys([char]175)};",
+    "runs": 0,
+    "createdAt": "2018-01-22T07:13:06.632Z",
+    "id": 7,
+    "lastRunAt": null,
+    "updatedAt": "2018-01-22T14:37:05.156Z"
+  },
+  {
+    "name": "Volume Down PC",
+    "voice": "(decrease volume|volume down)",
+    "script": "$obj = new-object -com wscript.shell;\n1..5 | % {$obj.SendKeys([char]174)};",
+    "runs": 0,
+    "createdAt": "2018-01-22T07:13:06.632Z",
+    "id": 8,
+    "lastRunAt": null,
+    "updatedAt": "2018-01-22T14:43:01.961Z"
+  },
+  {
+    "name": "Volume Mute PC",
+    "voice": "(mute|unmute)",
+    "script": "Start-Process \"D:\\Dropbox\\Software\\Development\\AutoHotkey\\Utility\\ScriptTrigger.ahk\" mute;",
+    "runs": 0,
+    "createdAt": "2018-01-22T07:13:06.632Z",
+    "id": 9,
+    "lastRunAt": null,
+    "updatedAt": "2018-01-23T03:41:46.095Z"
+  },
+  {
+    "name": "Moon Moon music",
+    "voice": "(moon moon).*(music)",
+    "script": "Start-Process \"C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe\" -ArgumentList \"/url https://www.youtube.com/watch?v=fEMNl-vjWpg\";",
+    "runs": 0,
+    "createdAt": "2018-01-22T07:13:06.632Z",
+    "id": 10,
+    "lastRunAt": null,
+    "updatedAt": "2018-01-23T03:41:27.488Z"
+  }
+]

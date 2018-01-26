@@ -10,7 +10,6 @@
       "assets": [
         "assets",
         "favicon.ico",
-        { "glob": "electron.prod.js", "input": "./electron", "output": "./" },
         { "glob": "package.json", "input": "./electron", "output": "./" }
       ],
       "index": "index.html",

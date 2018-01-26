@@ -61,10 +61,14 @@ import 'zone.js/dist/zone-mix';  // Included with Angular CLI.
 
 declare global {
   interface Window {
+    shell: any;
+    os: any;
     fs: any;
+    path: any;
     powershell: any;
     fswrapper: any;
     jsonwrapper: any;
+    store: any;
   }
 
   interface String {

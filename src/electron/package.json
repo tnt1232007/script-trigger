@@ -1,14 +1,49 @@
 {
   "name": "script-trigger",
   "productName": "ScriptTrigger",
-  "version": "1.0.0",
-  "description": "",
-  "main": "electron.prod.js",
+  "version": "2.1.0",
+  "description": "Create, manage and trigger Powershell Script",
+  "author": {
+    "name": "TNT",
+    "email": "tnt1232007@gmail.com"
+  },
+  "main": "electron.js",
   "license": "MIT",
+  "repository": {
+    "url": "https://bitbucket.org/tnt1232007/scripttrigger"
+  },
   "dependencies": {
     "chokidar": "^2.0.0",
+    "electron-is-dev": "^0.3.0",
+    "electron-store": "^1.3.0",
     "jsonfile": "^4.0.0",
     "node-powershell": "^3.3.1",
     "popper.js": "^1.13.0"
+  },
+  "build": {
+    "appId": "com.scriptrigger.tnt",
+    "productName": "ScriptTrigger",
+    "copyright": "Copyright © 2018 TNT",
+    "compression": "maximum",
+    "directories": {
+      "buildResources": "dist",
+      "output": "packages"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable",
+        "zip"
+      ],
+      "icon": "favicon.ico"
+    },
+    "nsis": {
+      "oneClick": "false",
+      "perMachine": "true",
+      "allowToChangeInstallationDirectory": "true"
+    },
+    "portable": {
+      "requestExecutionLevel": "highest"
+    }
   }
 }

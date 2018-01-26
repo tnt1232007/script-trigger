@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { SortableComponent } from 'ngx-bootstrap/sortable';
 
-import { environment } from '../environments/environment';
-import { CommandService } from './_services/command.service';
+import { Configuration } from './_models/configuration';
 import { Command } from './_models/command';
+import { StoreService } from './_services/store.service';
+import { CommandService } from './_services/command.service';
 
 @Component({
   selector: 'app-root',
@@ -13,18 +14,25 @@ import { Command } from './_models/command';
 export class AppComponent implements OnInit, OnDestroy {
   private watcher: any;
   public keyword = '';
+  public configuration: Configuration;
   public command: Command = {} as Command;
   public commands: Command[];
   public allCommands: Command[];
 
   @ViewChild(SortableComponent) sortableComponent: SortableComponent;
 
-  constructor(public commandService: CommandService) { }
+  constructor(
+    public storeService: StoreService,
+    public commandService: CommandService) { }
 
   public ngOnInit(): void {
+    this.configuration = this.storeService.get();
     this.allCommands = this.commands = this.commandService.loadCommands();
+    this.startWatching();
+  }
 
-    this.watcher = window.fswrapper.watch(environment.watchPath, { awaitWriteFinish: true }).on('change', (path, stats) => {
+  private startWatching() {
+    this.watcher = window.fswrapper.watch(this.storeService.getWatchFilePath(), { awaitWriteFinish: true }).on('change', (path, stats) => {
       window.fs.readFile(path, 'utf8', (err_, data) => {
         if (err_)
           throw err_;
@@ -124,5 +132,18 @@ export class AppComponent implements OnInit, OnDestroy {
       command.runs = 0;
     });
     this.commandService.saveCommands(this.commands);
+  }
+
+  public configFormSubmit(): void {
+    this.storeService.set(this.configuration);
+    this.configuration = this.storeService.get();
+    this.watcher.unwatch();
+    this.startWatching();
+  }
+
+  public openItem(path: string): void {
+    if (!window.fs.existsSync(path))
+      window.fs.writeFile(path, '');
+    window.shell.openItem(path);
   }
 }

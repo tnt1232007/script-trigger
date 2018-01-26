@@ -12,6 +12,7 @@ import { ElasticModule } from 'angular2-elastic';
 
 import { ByteSizeIconComponent } from './nested-components/bytesize-icon/bytesize-icon.component';
 import { AppComponent } from './app.component';
+import { StoreService } from './_services/store.service';
 import { CommandService } from './_services/command.service';
 
 @NgModule({
@@ -35,7 +36,7 @@ import { CommandService } from './_services/command.service';
       cancelButtonType: 'secondary'
     })
   ],
-  providers: [CommandService],
+  providers: [StoreService, CommandService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
