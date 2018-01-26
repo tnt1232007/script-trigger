@@ -90,7 +90,7 @@
                 </div>
                 <small class="form-text">
                   <a class="text-muted" placement="bottom" tabindex="-1" href="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg"
-                    tooltip="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg">
+                    tooltip="http://roualin.fr/wp-content/uploads/2017/11/powershell-cheat-sheet.jpg" containerClass="nowrap">
                     Powershell syntax
                     <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
                   </a>
@@ -104,7 +104,7 @@
                   type="text" class="form-control" name="inputVoice" id="inputVoice" #voice="ngModel">
                 <small class="form-text">
                   <a class="text-muted" placement="bottom" tabindex="-1" href="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf"
-                    tooltip="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf">
+                    tooltip="http://files.zeroturnaround.com/pdf/zt_regular-expressions-cheat-sheet.pdf" containerClass="nowrap">
                     Regular Expressions syntax
                     <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
                   </a>
@@ -173,13 +173,14 @@
             <div class="form-group row">
               <label for="inputWatchLocation" class="col-sm-3 col-form-label">Watch Location</label>
               <div class="col-sm-9">
-                <!-- <div class="custom-file">
-                  <input type="file" webkitdirectory class="custom-file-input" id="inputWatchLocation" name="inputWatchLocation">
-                  <label class="custom-file-label" for="inputWatchLocation">Choose folder</label>
-                </div> -->
-                <input [(ngModel)]="configuration.watchLocation" type="text" class="form-control" id="inputWatchLocation" name="inputWatchLocation">
+                <div class="input-group">
+                  <input [(ngModel)]="configuration.watchLocation" type="text" class="form-control" id="inputWatchLocation" name="inputWatchLocation">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" (click)="configuration.watchLocation = selectItem()">Browse</button>
+                  </div>
+                </div>
                 <small class="form-text text-muted">Activate command by voice, file name default to computer name:
-                  <a class="text-muted"  placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getWatchFilePath())" [tooltip]="storeService.getWatchFilePath()">
+                  <a class="text-muted"  placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getWatchFilePath())" [tooltip]="storeService.getWatchFilePath()" containerClass="nowrap">
                     {{storeService.getWatchFileName()}}
                     <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
                   </a>
@@ -189,10 +190,15 @@
             <div class="form-group row">
               <label for="inputDatabaseLocation" class="col-sm-3 col-form-label">Database Location</label>
               <div class="col-sm-9">
-                <input [(ngModel)]="configuration.databaseLocation" type="text" class="form-control" id="inputDatabaseLocation" name="inputDatabaseLocation">
+                <div class="input-group">
+                  <input [(ngModel)]="configuration.databaseLocation" type="text" class="form-control" id="inputDatabaseLocation" name="inputDatabaseLocation">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" (click)="configuration.databaseLocation = selectItem()">Browse</button>
+                  </div>
+                </div>
                 <small class="form-text text-muted">
                   Default to
-                  <a class="text-muted" placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getConfigLocation())" [tooltip]="storeService.getConfigLocation()">
+                  <a class="text-muted" placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getConfigLocation())" [tooltip]="storeService.getConfigLocation()" containerClass="nowrap">
                     User AppData folder
                     <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
                   </a>

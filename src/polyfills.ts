@@ -62,6 +62,7 @@ import 'zone.js/dist/zone-mix';  // Included with Angular CLI.
 declare global {
   interface Window {
     shell: any;
+    dialog: any;
     os: any;
     fs: any;
     path: any;

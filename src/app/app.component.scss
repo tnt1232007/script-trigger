@@ -6,11 +6,16 @@ button.close {
   outline: none;
 }
 
+:host /deep/ .nowrap .tooltip-inner {
+  max-width: none;
+  white-space: nowrap;
+}
+
 .clickable {
   cursor: pointer;
 }
 
-bs-sortable /deep/ .list-group {
+:host /deep/ .list-group {
   /deep/ .list-group-item {
     .showOnHover {
       visibility: hidden;

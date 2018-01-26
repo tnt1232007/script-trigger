@@ -136,9 +136,17 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public configFormSubmit(): void {
     this.storeService.set(this.configuration);
-    this.configuration = this.storeService.get();
     this.watcher.unwatch();
+
+    this.keyword = '';
+    this.configuration = this.storeService.get();
+    this.allCommands = this.commands = this.commandService.loadCommands();
     this.startWatching();
+  }
+
+  public selectItem(): string {
+    const selectedItems = window.dialog.showOpenDialog({properties: ['openDirectory']});
+    return selectedItems ? selectedItems[0] : '';
   }
 
   public openItem(path: string): void {

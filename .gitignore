@@ -43,5 +43,7 @@ Thumbs.db
 
 # Electron
 /packages
+
+# Custom
 *.js
 !_*.js
