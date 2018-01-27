@@ -1,4 +1,5 @@
 window.shell = require('electron').shell;
+window.app = require('electron').remote.app;
 window.dialog = require('electron').remote.dialog;
 window.os = require('os');
 window.fs = require('fs');

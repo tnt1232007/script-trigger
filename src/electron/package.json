@@ -1,8 +1,7 @@
 {
   "name": "script-trigger",
   "productName": "ScriptTrigger",
-  "version": "2.1.1",
-  "description": "Create, manage and trigger Powershell Script",
+  "version": "2.1.2",
   "author": {
     "name": "TNT",
     "email": "tnt1232007@gmail.com"

@@ -1,3 +1,15 @@
+.clickable {
+  cursor: pointer;
+}
+
+.text-relax {
+  letter-spacing: 2px;
+}
+
+.full-page {
+  height: 100vh;
+}
+
 pre {
   white-space: pre-line;
 }
@@ -6,17 +18,40 @@ button.close {
   outline: none;
 }
 
+.content-logo {
+  img {
+    width: 50vh;
+    height: 50vh;
+  }
+}
+
+.content-header {
+  h1 {
+    font-size: 18vh;
+  }
+
+  small {
+    font-size: 20%;
+  }
+}
+
 :host /deep/ .nowrap .tooltip-inner {
   max-width: none;
   white-space: nowrap;
 }
 
-.clickable {
-  cursor: pointer;
+:host /deep/ .list-group-flush {
+  .list-group-item:first-child {
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+  }
+
+  .list-group-item:last-child {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  }
 }
 
 :host /deep/ .list-group {
-  /deep/ .list-group-item {
+  .list-group-item {
     .showOnHover {
       visibility: hidden;
     }
@@ -25,4 +60,14 @@ button.close {
       visibility: inherit;
     }
   }
+}
+
+.navbar.fixed-top,
+.navbar.fixed-bottom {
+  padding-right: 16px;
+}
+
+:host-context(.modal-open) .navbar.fixed-top.fixed-padding,
+:host-context(.modal-open) .navbar.fixed-bottom.fixed-padding {
+  padding-right: 35px;
 }

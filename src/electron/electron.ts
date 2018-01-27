@@ -11,6 +11,8 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1280,
     height: 720,
+    minWidth: 640,
+    minHeight: 360,
     icon: path.join(cwd, 'favicon.ico'),
   });
 

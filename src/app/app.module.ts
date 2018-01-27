@@ -9,6 +9,7 @@ import { MomentModule } from 'angular2-moment';
 import { HighlightModule } from 'ngx-highlightjs';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { ElasticModule } from 'angular2-elastic';
+import { NgxPageScrollModule } from 'ngx-page-scroll';
 
 import { ByteSizeIconComponent } from './nested-components/bytesize-icon/bytesize-icon.component';
 import { AppComponent } from './app.component';
@@ -25,6 +26,7 @@ import { CommandService } from './_services/command.service';
     FormsModule,
     MomentModule,
     ElasticModule,
+    NgxPageScrollModule,
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
     SortableModule.forRoot(),

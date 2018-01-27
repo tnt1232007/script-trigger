@@ -18,7 +18,18 @@ export class AppComponent implements OnInit, OnDestroy {
   public command: Command = {} as Command;
   public commands: Command[];
   public allCommands: Command[];
-
+  public easeInOutExpoEasing: any = {
+    ease: (t: number, b: number, c: number, d: number): number => {
+      if (t === 0) return b;
+      if (t === d) return b + c;
+      if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+      return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
+    }
+  };
+  public jsonFilter: any = [
+    {name: 'JSON', extensions: ['json']},
+    {name: 'All Files', extensions: ['*']}
+  ];
   @ViewChild(SortableComponent) sortableComponent: SortableComponent;
 
   constructor(
@@ -49,6 +60,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.watcher.unwatch();
+  }
+
+  public getAppVersion() {
+    return window.app.getVersion();
   }
 
   public isContainParams(voice: string) {
@@ -122,6 +137,15 @@ export class AppComponent implements OnInit, OnDestroy {
     this.sortableComponent.writeValue(this.commands);
   }
 
+  public import(path: string): void {
+    if (!path)
+      return;
+    const commands: Command[] = window.jsonwrapper.readFileSync(path);
+    this.commands.push(...commands);
+    this.commandService.saveCommands(this.commands);
+    this.sortableComponent.writeValue(this.commands);
+  }
+
   public afterSort(): void {
     this.commandService.saveCommands(this.commands);
   }
@@ -144,8 +168,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.startWatching();
   }
 
-  public selectItem(): string {
-    const selectedItems = window.dialog.showOpenDialog({properties: ['openDirectory']});
+  public selectItem(property: string, filters?: any[]): string {
+    const selectedItems = window.dialog.showOpenDialog({ properties: [property], filters: filters });
     return selectedItems ? selectedItems[0] : '';
   }
 

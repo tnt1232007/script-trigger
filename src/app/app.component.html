@@ -1,10 +1,44 @@
-<header class="sticky-top">
-  <nav class="navbar navbar-dark bg-primary">
-    <a class="navbar-brand" href="#" draggable="false">
-      <img src="assets/script.svg" width="30" height="30" class="d-inline-block align-top" alt=""> ScriptTrigger
+<header>
+  <nav class="navbar navbar-expand navbar-dark bg-primary fixed-top" [ngClass]="{'fixed-padding': commands.length > 0}">
+    <a class="navbar-brand" href="#top" draggable="false">
+      <img src="assets/script.png" width="30" height="30" class="d-inline-block align-top" alt="">
     </a>
-    <div class="form-inline ml-auto">
-      <button type="button" class="btn btn-outline-light mr-2" (click)="onNew(); commandForm.form.reset(); commandModal.show();">New Command</button>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" pageScroll [pageScrollOffset]="56" [pageScrollEasing]="easeInOutExpoEasing" href="#top">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" pageScroll [pageScrollOffset]="56" [pageScrollEasing]="easeInOutExpoEasing" href="#commands">Commands</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" pageScroll [pageScrollOffset]="56" [pageScrollEasing]="easeInOutExpoEasing" href="#examples">Examples</a>
+      </li> -->
+    </ul>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link text-hover-light" pageScroll [pageScrollOffset]="56" [pageScrollEasing]="easeInOutExpoEasing" href="#commands"
+          (click)="onNew(); commandForm.form.reset(); commandModal.show();" tooltip="New" placement="bottom" [delay]="500">
+          <app-bytesize-icon id="i-plus" size="22" stroke="2"></app-bytesize-icon>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-hover-light" (click)="import(selectItem('openFile', jsonFilter))" tooltip="Import" placement="bottom" [delay]="500">
+          <app-bytesize-icon id="i-import" size="22" stroke="2"></app-bytesize-icon>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-hover-light" pageScroll [pageScrollOffset]="56" [pageScrollEasing]="easeInOutExpoEasing" href="#commands"
+          tooltip="Filter" placement="bottom" [delay]="500">
+          <app-bytesize-icon id="i-search" size="22" stroke="2"></app-bytesize-icon>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-hover-light" (click)="configModal.show();" tooltip="Configuration" placement="bottom" [delay]="500">
+          <app-bytesize-icon id="i-settings" size="22" stroke="2"></app-bytesize-icon>
+        </a>
+      </li>
+    </ul>
+    <!--
       <div class="input-group mr-2">
         <div class="input-group-prepend">
           <div class="input-group-text">
@@ -13,51 +47,60 @@
         </div>
         <input [(ngModel)]="keyword" (ngModelChange)="filter()" class="form-control" type="search" placeholder="Filter">
       </div>
-      <button type="button" class="btn btn-outline-light pb-0" (click)="configModal.show();">
-        <app-bytesize-icon id="i-settings" size="22" stroke="2"></app-bytesize-icon>
-      </button>
-    </div>
+      -->
   </nav>
 </header>
 
 <main>
-  <div class="fluid-container">
-    <ng-template #itemTemplate let-item="item">
-      <div class="d-flex w-100">
-        <h5 class="text-primary clickable" (click)="onEdit(item.value); commandModal.show();">
-          {{item.value.id}}.
-          <a draggable="false">{{item.value.name}}</a>
-        </h5>
-        <small class="ml-auto" *ngIf="item.value.lastRunAt">{{item.value.lastRunAt | amTimeAgo}}</small>
-      </div>
-      <div class="d-flex w-100 align-items-center">
-        <pre class="my-1 mr-3"><code highlight [code]="item.value.script"></code></pre>
-        <button type="button" tooltip="Edit" class="btn btn-light rounded-0 showOnHover text-muted text-hover-warning" (click)="onEdit(item.value); commandModal.show();">
-          <app-bytesize-icon id="i-edit"></app-bytesize-icon>
-        </button>
-        <!-- <button type="button" class="btn btn-light rounded-0 showOnHover text-muted" (click)="onDuplicate(item.value); commandModal.show();" tooltip="Duplicate">
-          <app-bytesize-icon id="i-clipboard"></app-bytesize-icon>
-        </button> -->
-        <button type="button" tooltip="Delete" class="btn btn-light rounded-0 showOnHover text-muted text-hover-danger mr-3" mwlConfirmationPopover
-          popoverTitle="Are you sure?" popoverMessage="Delete '{{item.value.name}}' permanently" placement="{{item.value.id === 1 ? 'bottom' : 'top'}}"
-          (confirm)="delete(item.value)">
-          <app-bytesize-icon id="i-trash"></app-bytesize-icon>
-        </button>
-        <div class="btn-group ml-auto">
-          <button type="button" class="btn btn-danger" (click)="trigger(item.value)">Trigger
-            <span class="badge badge-light">{{item.value.runs}}</span>
-          </button>
-        </div>
-      </div>
-      <small class="text-muted regex">{{item.value.voice}}&nbsp;</small>
-    </ng-template>
-
+  <div id="top" class="full-page d-flex align-items-center justify-content-center">
+    <div class="content-logo">
+      <img alt="" src="assets/script.png">
+    </div>
+    <div class="content-header d-flex flex-column justify-content-center">
+      <h1 class="font-weight-light mb-3">
+        ScriptTrigger<small>v{{getAppVersion()}}</small>
+      </h1>
+      <a class="btn btn-outline-primary py-3 mb-3 text-relax" pageScroll [pageScrollOffset]="56" [pageScrollEasing]="easeInOutExpoEasing" href="#commands">GET STARTED</a>
+    </div>
+  </div>
+  <div id="commands">
     <bs-sortable [(ngModel)]="commands" [itemTemplate]="itemTemplate" (drop)="afterSort()" wrapperClass="list-group list-group-flush"
       itemClass="sortable-item list-group-item list-group-item-action flex-column align-items-start"></bs-sortable>
 
-    <button type="button" class="btn btn-block btn-outline-danger border-0 rounded-0 py-4" mwlConfirmationPopover popoverTitle="Are you sure?"
-      popoverMessage="Reset all Runs and Last run statistics" placement="top" (confirm)="resetAllStats()">Reset Runs</button>
+    <button *ngIf="commands.length > 0" type="button" class="btn btn-block btn-outline-danger border-0 rounded-0 py-4" mwlConfirmationPopover
+      popoverTitle="Are you sure?" popoverMessage="Reset all Runs and Last run statistics" placement="top" (confirm)="resetAllStats()">Reset Runs</button>
   </div>
+</main>
+
+<footer>
+  <ng-template #itemTemplate let-item="item">
+    <div class="d-flex w-100">
+      <h5 class="text-primary clickable" (click)="onEdit(item.value); commandModal.show();">
+        {{item.value.id}}.
+        <a draggable="false">{{item.value.name}}</a>
+      </h5>
+      <small class="ml-auto" *ngIf="item.value.lastRunAt">{{item.value.lastRunAt | amTimeAgo}}</small>
+    </div>
+    <div class="d-flex w-100 align-items-center">
+      <pre class="my-1 mr-3"><code highlight [code]="item.value.script"></code></pre>
+      <button type="button" tooltip="Edit" class="btn btn-light rounded-0 showOnHover text-muted text-hover-warning" (click)="onEdit(item.value); commandModal.show();">
+        <app-bytesize-icon id="i-edit"></app-bytesize-icon>
+      </button>
+      <!-- <button type="button" class="btn btn-light rounded-0 showOnHover text-muted" (click)="onDuplicate(item.value); commandModal.show();" tooltip="Duplicate">
+        <app-bytesize-icon id="i-clipboard"></app-bytesize-icon>
+      </button> -->
+      <button type="button" tooltip="Delete" class="btn btn-light rounded-0 showOnHover text-muted text-hover-danger mr-3" mwlConfirmationPopover
+        popoverTitle="Are you sure?" popoverMessage="Delete '{{item.value.name}}' permanently" (confirm)="delete(item.value)">
+        <app-bytesize-icon id="i-trash"></app-bytesize-icon>
+      </button>
+      <div class="btn-group ml-auto">
+        <button type="button" class="btn btn-danger" (click)="trigger(item.value)">Trigger
+          <span class="badge badge-light">{{item.value.runs}}</span>
+        </button>
+      </div>
+    </div>
+    <small class="text-muted regex">{{item.value.voice}}&nbsp;</small>
+  </ng-template>
 
   <div bsModal #commandModal="bs-modal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -176,11 +219,12 @@
                 <div class="input-group">
                   <input [(ngModel)]="configuration.watchLocation" type="text" class="form-control" id="inputWatchLocation" name="inputWatchLocation">
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" (click)="configuration.watchLocation = selectItem()">Browse</button>
+                    <button class="btn btn-outline-secondary" type="button" (click)="configuration.watchLocation = selectItem('openDirectory')">Browse</button>
                   </div>
                 </div>
                 <small class="form-text text-muted">Activate command by voice, file name default to computer name:
-                  <a class="text-muted"  placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getWatchFilePath())" [tooltip]="storeService.getWatchFilePath()" containerClass="nowrap">
+                  <a class="text-muted" placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getWatchFilePath())" [tooltip]="storeService.getWatchFilePath()"
+                    containerClass="nowrap">
                     {{storeService.getWatchFileName()}}
                     <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
                   </a>
@@ -193,12 +237,13 @@
                 <div class="input-group">
                   <input [(ngModel)]="configuration.databaseLocation" type="text" class="form-control" id="inputDatabaseLocation" name="inputDatabaseLocation">
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" (click)="configuration.databaseLocation = selectItem()">Browse</button>
+                    <button class="btn btn-outline-secondary" type="button" (click)="configuration.databaseLocation = selectItem('openDirectory')">Browse</button>
                   </div>
                 </div>
                 <small class="form-text text-muted">
                   Default to
-                  <a class="text-muted" placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getConfigLocation())" [tooltip]="storeService.getConfigLocation()" containerClass="nowrap">
+                  <a class="text-muted" placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getConfigLocation())" [tooltip]="storeService.getConfigLocation()"
+                    containerClass="nowrap">
                     User AppData folder
                     <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
                   </a>
@@ -214,7 +259,4 @@
       </form>
     </div>
   </div>
-</main>
-
-<footer>
 </footer>
