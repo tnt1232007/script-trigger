@@ -13,6 +13,7 @@ import { CommandService } from './_services/command.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private watcher: any;
+  public showFilter = false;
   public keyword = '';
   public configuration: Configuration;
   public command: Command = {} as Command;
