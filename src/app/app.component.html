@@ -66,7 +66,7 @@
   <ng-template #itemTemplate let-item="item">
     <div class="d-flex w-100">
       <h5 class="text-primary clickable" (click)="onEdit(item.value); commandModal.show();">
-        {{item.value.id}}.{{item.value.name}}
+        {{item.value.id}}. {{item.value.name}}
       </h5>
       <small class="ml-auto" *ngIf="item.value.lastRunAt">{{item.value.lastRunAt | amTimeAgo}}</small>
     </div>

@@ -58,7 +58,7 @@ app.on('ready', () => {
   if (prodMode)
     createWindow();
   else
-    setTimeout(createWindow, 10000);
+    setTimeout(createWindow, 16000);
 });
 
 app.on('window-all-closed', () => {

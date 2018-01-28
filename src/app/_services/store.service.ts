@@ -9,7 +9,7 @@ export class StoreService {
 
   constructor() {
     this.store = new window.store({
-      cwd: environment.production ? '' : window.path.resolve('src/assets')
+      cwd: environment.production ? '' : window.path.resolve('res')
     });
   }
 
