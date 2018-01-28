@@ -10,3 +10,4 @@ window.powershell = require('node-powershell');
 window.fswrapper = require('chokidar');
 window.jsonwrapper = require('jsonfile');
 window.store = require('electron-store');
+window.pushbullet = require('pushbullet');

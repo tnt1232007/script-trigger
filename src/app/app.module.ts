@@ -13,8 +13,10 @@ import { NgxPageScrollModule } from 'ngx-page-scroll';
 
 import { ByteSizeIconComponent } from './nested-components/bytesize-icon/bytesize-icon.component';
 import { AppComponent } from './app.component';
+import { IWatchService } from './_services/interface/watch.service';
 import { StoreService } from './_services/store.service';
 import { CommandService } from './_services/command.service';
+import { PushBulletWatchService } from './_services/pushbullet.watch.service';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,11 @@ import { CommandService } from './_services/command.service';
       cancelButtonType: 'secondary'
     })
   ],
-  providers: [StoreService, CommandService],
+  providers: [
+    StoreService,
+    CommandService,
+    { provide: IWatchService, useClass: PushBulletWatchService}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

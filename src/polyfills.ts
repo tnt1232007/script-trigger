@@ -71,6 +71,7 @@ declare global {
     fswrapper: any;
     jsonwrapper: any;
     store: any;
+    pushbullet: any;
   }
 
   interface String {

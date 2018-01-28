@@ -5,6 +5,7 @@ import { Configuration } from './_models/configuration';
 import { Command } from './_models/command';
 import { StoreService } from './_services/store.service';
 import { CommandService } from './_services/command.service';
+import { IWatchService } from './_services/interface/watch.service';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +13,8 @@ import { CommandService } from './_services/command.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  private watcher: any;
-  public showFilter = false;
-  public keyword = '';
+  public showFilter: boolean;
+  public keyword: string;
   public configuration: Configuration;
   public command: Command = {} as Command;
   public commands: Command[];
@@ -28,39 +28,29 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   };
   public jsonFilter: any = [
-    {name: 'JSON', extensions: ['json']},
-    {name: 'All Files', extensions: ['*']}
+    { name: 'JSON', extensions: ['json'] },
+    { name: 'All Files', extensions: ['*'] }
   ];
   @ViewChild(SortableComponent) sortableComponent: SortableComponent;
 
   constructor(
     public storeService: StoreService,
-    public commandService: CommandService) { }
+    public commandService: CommandService,
+    public watchService: IWatchService) { }
 
   public ngOnInit(): void {
-    this.configuration = this.storeService.get();
+    this.showFilter = false;
+    this.keyword = '';
+    this.configuration = this.storeService.fetch();
     this.allCommands = this.commands = this.commandService.loadCommands();
-    this.startWatching();
-  }
-
-  private startWatching() {
-    this.watcher = window.fswrapper.watch(this.storeService.getWatchFilePath(), { awaitWriteFinish: true }).on('change', (path, stats) => {
-      window.fs.readFile(path, 'utf8', (err_, data) => {
-        if (err_)
-          throw err_;
-        if (data) {
-          const lines = data.trim().split('\n');
-          const lastLine = lines.slice(-1)[0];
-
-          const commands = this.commandService.extractCommands(lastLine);
-          this.commandService.runCommands(...commands);
-        }
-      });
+    this.watchService.startWatching(message => {
+      const commands = this.commandService.extractCommands(message);
+      this.commandService.runCommands(...commands);
     });
   }
 
   public ngOnDestroy(): void {
-    this.watcher.unwatch();
+    this.watchService.stopWatching();
   }
 
   public getAppVersion() {
@@ -160,13 +150,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public configFormSubmit(): void {
-    this.storeService.set(this.configuration);
-    this.watcher.unwatch();
-
-    this.keyword = '';
-    this.configuration = this.storeService.get();
-    this.allCommands = this.commands = this.commandService.loadCommands();
-    this.startWatching();
+    this.storeService.push(this.configuration);
+    this.watchService.stopWatching();
+    this.ngOnInit();
   }
 
   public selectItem(property: string, filters?: any[]): string {

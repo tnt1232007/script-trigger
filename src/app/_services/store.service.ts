@@ -5,7 +5,7 @@ import { Configuration } from '../_models/configuration';
 @Injectable()
 export class StoreService {
   private store: any;
-  private configuration: Configuration;
+  public configuration: Configuration;
 
   constructor() {
     this.store = new window.store({
@@ -13,13 +13,13 @@ export class StoreService {
     });
   }
 
-  public get(): any {
+  public fetch(): any {
     if (!this.configuration)
       this.configuration = this.store.store;
     return this.configuration;
   }
 
-  public set(jsonObj: any): void {
+  public push(jsonObj: any): void {
     this.store.set(jsonObj);
   }
 

@@ -31,7 +31,7 @@ export class CommandService {
     const allCommands = this.loadCommands();
     const commands: Command[] = [];
     for (const cmd of allCommands) {
-      const reg = new RegExp(cmd.voice);
+      const reg = new RegExp(cmd.voice, 'i');
       const matches = reg.exec(voice);
       if (matches) {
         cmd.params = matches.slice(1).join(',');
@@ -42,6 +42,9 @@ export class CommandService {
   }
 
   public runCommands(...commands: Command[]): Observable<any> {
+    if (!commands || commands.length === 0)
+      return;
+
     const consoles = [console.log, console.warn];
     console.log = function () { };
     console.warn = function () { };

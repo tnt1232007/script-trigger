@@ -16,8 +16,7 @@
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link text-hover-light" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#commands"
-          (click)="onNew(); commandForm.form.reset(); commandModal.show();">
+        <a class="nav-link text-hover-light" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#commands" (click)="onNew(); commandForm.form.reset(); commandModal.show();">
           <app-bytesize-icon id="i-plus" size="22" stroke="2"></app-bytesize-icon>
         </a>
       </li>
@@ -38,7 +37,8 @@
       </li>
     </ul>
   </nav>
-  <input #searchInput [style.opacity]="showFilter || keyword ? '1' : '0'" [(ngModel)]="keyword" (ngModelChange)="filter()" id="searchInput" type="search" autofocus="true" (blur)="showFilter = false">
+  <input #searchInput [style.opacity]="showFilter || keyword ? '1' : '0'" [(ngModel)]="keyword" (ngModelChange)="filter()"
+    id="searchInput" type="search" autofocus="true" (blur)="showFilter = false">
 </header>
 
 <main>
@@ -66,8 +66,7 @@
   <ng-template #itemTemplate let-item="item">
     <div class="d-flex w-100">
       <h5 class="text-primary clickable" (click)="onEdit(item.value); commandModal.show();">
-        {{item.value.id}}.
-        <a draggable="false">{{item.value.name}}</a>
+        {{item.value.id}}.{{item.value.name}}
       </h5>
       <small class="ml-auto" *ngIf="item.value.lastRunAt">{{item.value.lastRunAt | amTimeAgo}}</small>
     </div>
@@ -203,7 +202,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="form-group row">
+            <!-- <div class="form-group row">
               <label for="inputWatchLocation" class="col-sm-3 col-form-label">Watch Location</label>
               <div class="col-sm-9">
                 <div class="input-group">
@@ -216,6 +215,21 @@
                   <a class="text-muted" placement="bottom" tabindex="-1" href="#" (click)="openItem(storeService.getWatchFilePath())" [tooltip]="storeService.getWatchFilePath()"
                     containerClass="nowrap">
                     {{storeService.getWatchFileName()}}
+                    <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
+                  </a>
+                </small>
+              </div>
+            </div> -->
+            <div class="form-group row">
+              <label for="inputPushbulletApiKey" class="col-sm-3 col-form-label">Pushbullet Api Key</label>
+              <div class="col-sm-9">
+                <div class="input-group">
+                  <input [(ngModel)]="configuration.pushbulletApiKey" type="text" class="form-control" id="inputPushbulletApiKey" name="inputPushbulletApiKey">
+                </div>
+                <small class="form-text">
+                  <a class="text-muted" placement="bottom" tabindex="-1" href="https://www.pushbullet.com/#settings/account"
+                    tooltip="https://www.pushbullet.com/#settings/account" containerClass="nowrap">
+                    Pushbullet > Settings > Create Access Token
                     <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
                   </a>
                 </small>
