@@ -35,7 +35,6 @@
     "ngx-highlightjs": "^1.4.0",
     "ngx-page-scroll": "^4.0.2",
     "popper.js": "^1.13.0",
-    "pushbullet": "^2.1.0",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.20"
   },
@@ -67,6 +66,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "node-powershell": "^3.3.1",
     "protractor": "^5.2.2",
+    "pushbullet": "^2.1.0",
     "ts-node": "^4.1.0",
     "tslint": "^5.9.1",
     "typescript": "^2.6.2"

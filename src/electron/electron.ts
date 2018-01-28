@@ -21,6 +21,9 @@ function createWindow() {
     : { pathname: 'localhost:4200', protocol: 'http:', slashes: true };
   win.loadURL(url.format(urlObject));
 
+  if (!prodMode)
+    win.webContents.toggleDevTools();
+
   tray = new Tray(path.join(cwd, 'favicon.ico'));
   tray.setToolTip('ScriptTrigger');
   tray.on('double-click', () => win.show());

@@ -16,22 +16,22 @@
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link text-hover-light" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#commands" (click)="onNew(); commandForm.form.reset(); commandModal.show();">
+        <a class="nav-link text-hover-light" href="#" (click)="onNew(); commandForm.form.reset(); commandModal.show();">
           <app-bytesize-icon id="i-plus" size="22" stroke="2"></app-bytesize-icon>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-hover-light" (click)="import(selectItem('openFile', jsonFilter))">
+        <a class="nav-link text-hover-light" href="#" (click)="import(selectItem('openFile', jsonFilter))">
           <app-bytesize-icon id="i-import" size="22" stroke="2"></app-bytesize-icon>
         </a>
       </li>
-      <li class="nav-item d-flex flex-row text-hover-light">
-        <a class="nav-link" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#commands" (click)="showFilter = true; searchInput.focus();">
+      <li class="nav-item">
+        <a class="nav-link text-hover-light" href="#" (click)="showFilter = true; searchInput.focus();">
           <app-bytesize-icon id="i-search" size="22" stroke="2"></app-bytesize-icon>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-hover-light" (click)="configModal.show();">
+        <a class="nav-link text-hover-light" href="#" (click)="configModal.show()">
           <app-bytesize-icon id="i-settings" size="22" stroke="2"></app-bytesize-icon>
         </a>
       </li>
@@ -50,14 +50,34 @@
       <h1 class="font-weight-light mb-3">
         ScriptTrigger<small>v{{getAppVersion()}}</small>
       </h1>
-      <a class="btn btn-outline-primary py-3 mb-3 text-relax" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#commands">GET STARTED</a>
+      <div class="row">
+        <div class="col-6">
+          <a class="btn btn-block btn-primary py-3 mb-3 text-relax text-uppercase" href="#" (click)="onNew(); commandForm.form.reset(); commandModal.show();">
+            <app-bytesize-icon id="i-plus"></app-bytesize-icon>
+            New Command
+          </a>
+        </div>
+        <div class="col-6">
+          <a class="btn btn-block btn-outline-primary py-3 mb-3 text-relax text-uppercase" href="#" (click)="configModal.show()">
+            <app-bytesize-icon id="i-settings"></app-bytesize-icon>
+            Settings
+          </a>
+        </div>
+      </div>
+      <div class="row" *ngIf="commands.length > 0">
+        <div class="col-12 text-center">
+          <a class="btn btn-link py-3 mb-3" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#commands">
+            <small class="text-muted mr-3"><app-bytesize-icon id="i-chevron-bottom"></app-bytesize-icon></small>View Existing Commands
+          </a>
+        </div>
+      </div>
     </div>
   </div>
-  <div id="commands" class="fixed-padding-top">
+  <div *ngIf="commands && commands.length > 0" id="commands" class="fixed-padding-top">
     <bs-sortable [(ngModel)]="commands" [itemTemplate]="itemTemplate" (drop)="afterSort()" wrapperClass="list-group list-group-flush"
       itemClass="sortable-item list-group-item list-group-item-action flex-column align-items-start"></bs-sortable>
 
-    <button *ngIf="commands.length > 0" type="button" class="btn btn-block btn-outline-danger border-0 rounded-0 py-4" mwlConfirmationPopover
+    <button type="button" class="btn btn-block btn-outline-danger border-0 rounded-0 py-4" mwlConfirmationPopover
       popoverTitle="Are you sure?" popoverMessage="Reset all Runs and Last run statistics" placement="top" (confirm)="resetAllStats()">Reset Runs</button>
   </div>
 </main>
