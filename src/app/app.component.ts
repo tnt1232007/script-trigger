@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SortableComponent } from 'ngx-bootstrap/sortable';
+import 'rxjs/add/operator/finally';
 
 import { Configuration } from './_models/configuration';
 import { Command } from './_models/command';
+import { Activity } from './_models/activity';
 import { StoreService } from './_services/store.service';
 import { CommandService } from './_services/command.service';
 import { IWatchService } from './_services/interface/watch.service';
@@ -75,6 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public command: Command = {} as Command;
   public commands: Command[];
   public allCommands: Command[];
+  public activities: Activity[];
   public jsonFilter: any = [
     { name: 'JSON', extensions: ['json'] },
     { name: 'All Files', extensions: ['*'] }
@@ -90,10 +93,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.showFilter = false;
     this.keyword = '';
     this.configuration = this.storeService.fetch();
-    this.allCommands = this.commands = this.commandService.loadCommands();
+    this.allCommands = this.commands = this.commandService.load();
     this.watchService.startWatching(message => {
-      const commands = this.commandService.extractCommands(message);
-      this.commandService.runCommands(...commands);
+      this.commandService.extractAndRun(message).subscribe();
     });
   }
 
@@ -123,6 +125,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.command = {} as Command;
   }
 
+  public onView(command: Command): void {
+    this.command = command;
+    this.command.id = -1;
+  }
+
   public onEdit(command: Command): void {
     this.command = { ...command };
   }
@@ -130,18 +137,15 @@ export class AppComponent implements OnInit, OnDestroy {
   public trigger(command: Command): void {
     command.lastRunAt = new Date();
     command.runs = command.runs ? command.runs + 1 : 1;
-    this.commandService.runCommands(command).subscribe(o => {
-      this.commandService.saveCommands(this.commands);
-    }, err => {
-      window.logger.error(err);
-      this.commandService.saveCommands(this.commands);
-    });
+    this.commandService.run(command)
+      .finally(() => this.commandService.save(this.commands))
+      .subscribe();
   }
 
   public delete(command?: Command): void {
     const index: number = this.commands.findIndex(o => o.id === (command ? command.id : this.command.id));
     this.commands.splice(index, 1);
-    this.commandService.saveCommands(this.commands);
+    this.commandService.save(this.commands);
     this.sortableComponent.writeValue(this.commands);
   }
 
@@ -160,7 +164,7 @@ export class AppComponent implements OnInit, OnDestroy {
       command.params = this.command.params;
       command.updatedAt = new Date();
     }
-    this.commandService.saveCommands(this.commands);
+    this.commandService.save(this.commands);
     this.sortableComponent.writeValue(this.commands);
   }
 
@@ -169,12 +173,12 @@ export class AppComponent implements OnInit, OnDestroy {
       return;
     const commands: Command[] = window.jsonwrapper.readFileSync(path);
     this.commands.push(...commands);
-    this.commandService.saveCommands(this.commands);
+    this.commandService.save(this.commands);
     this.sortableComponent.writeValue(this.commands);
   }
 
   public afterSort(): void {
-    this.commandService.saveCommands(this.commands);
+    this.commandService.save(this.commands);
   }
 
   public resetAll(): void {
@@ -182,12 +186,12 @@ export class AppComponent implements OnInit, OnDestroy {
       command.lastRunAt = null;
       command.runs = 0;
     });
-    this.commandService.saveCommands(this.commands);
+    this.commandService.save(this.commands);
   }
 
   public deleteAll(): void {
     this.commands = [];
-    this.commandService.saveCommands(this.commands);
+    this.commandService.save(this.commands);
   }
 
   public configFormSubmit(): void {

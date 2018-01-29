@@ -88,9 +88,6 @@ main {
       top: 0;
       right: 0;
       z-index: $zindex-fixed;
-      width: 20vw;
-      height: 100%;
-      background: #000;
     }
   }
 }
@@ -119,5 +116,20 @@ main {
     &:hover .showOnHover {
       visibility: inherit;
     }
+  }
+}
+
+:host /deep/ .card {
+  background-color: inherit;
+  border: none;
+  border-top: 0.1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0;
+
+  .card-header {
+    cursor: pointer;
+  }
+
+  .card-body {
+    padding-top: 0;
   }
 }

@@ -1,102 +1,113 @@
 [
   {
-    "name": "Shutdown PC",
-    "voice": "(shutdown|turn off).*(pc|computer)",
+    "name": "Shutdown",
+    "voice": "(shutdown|turn off)",
     "script": "shutdown /s /t 30 /c 'Shutdown by Script Trigger';",
-    "runs": 0,
+    "runs": 1,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 1,
-    "lastRunAt": null,
-    "updatedAt": "2018-01-22T15:03:12.292Z"
+    "lastRunAt": "2018-01-29T18:25:34.775Z",
+    "updatedAt": "2018-01-29T17:15:43.296Z"
   },
   {
-    "name": "Restart PC",
-    "voice": "(restart).*(pc|computer)",
+    "name": "Restart",
+    "voice": "restart",
     "script": "shutdown /r /t 30 /c 'Restart by Script Trigger';",
     "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 2,
     "lastRunAt": null,
-    "updatedAt": "2018-01-22T15:24:06.024Z"
+    "updatedAt": "2018-01-29T17:15:54.103Z"
   },
   {
-    "name": "Cancel Shutdown/Restart PC",
+    "name": "Cancel Shutdown/Restart",
     "script": "shutdown /a",
-    "voice": null,
+    "voice": "cancel (shutdown|restart)",
     "id": 3,
-    "lastRunAt": null,
-    "runs": 0,
-    "updatedAt": "2018-01-25T07:07:30.389Z"
+    "lastRunAt": "2018-01-29T18:25:46.209Z",
+    "runs": 2,
+    "updatedAt": "2018-01-29T17:16:18.706Z"
   },
   {
-    "name": "Lock PC",
-    "voice": "(lock).*(pc|computer)",
+    "name": "Lock Out",
+    "voice": "lock out",
     "script": "rundll32.exe user32.dll,LockWorkStation;",
     "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 4,
     "lastRunAt": null,
-    "updatedAt": "2018-01-22T15:25:18.518Z"
+    "updatedAt": "2018-01-29T17:17:44.594Z"
   },
   {
-    "name": "Sleep PC",
-    "voice": "(sleep).*(pc|computer)",
+    "name": "Sleep",
+    "voice": "sleep",
     "script": "rundll32.exe powrprof.dll,SetSuspendState Sleep;",
     "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 5,
     "lastRunAt": null,
-    "updatedAt": "2018-01-22T16:15:44.351Z"
+    "updatedAt": "2018-01-29T17:17:51.563Z"
   },
   {
-    "name": "Set Volume PC",
+    "name": "Set Volume",
     "voice": "volume to (.*)",
     "script": "$obj = New-Object -com wscript.shell;\n$down = 100/2; $up = {0}/2;\n1..$down | % {$obj.SendKeys([char]174)};\n1..$up | % {$obj.SendKeys([char]175)};",
     "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 6,
     "lastRunAt": null,
-    "updatedAt": "2018-01-25T09:34:29.304Z",
+    "updatedAt": "2018-01-29T17:18:07.184Z",
     "params": "40"
   },
   {
-    "name": "Volume Up PC",
+    "name": "Volume Up",
     "voice": "(increase volume|volume up)",
     "script": "$obj = new-object -com wscript.shell;\n1..5 | % {$obj.SendKeys([char]175)};",
-    "runs": 0,
+    "runs": 1,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 7,
-    "lastRunAt": null,
-    "updatedAt": "2018-01-22T14:37:05.156Z"
+    "lastRunAt": "2018-01-29T18:25:30.397Z",
+    "updatedAt": "2018-01-29T17:18:14.226Z"
   },
   {
-    "name": "Volume Down PC",
+    "name": "Volume Down",
     "voice": "(decrease volume|volume down)",
     "script": "$obj = new-object -com wscript.shell;\n1..5 | % {$obj.SendKeys([char]174)};",
-    "runs": 0,
+    "runs": 3,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 8,
-    "lastRunAt": null,
-    "updatedAt": "2018-01-22T14:43:01.961Z"
+    "lastRunAt": "2018-01-29T18:30:50.506Z",
+    "updatedAt": "2018-01-29T17:18:17.118Z"
   },
   {
-    "name": "Volume Mute PC",
+    "name": "Volume Mute",
     "voice": "(mute|unmute)",
     "script": "Start-Process \"D:\\Dropbox\\Software\\Development\\AutoHotkey\\Utility\\ScriptTrigger.ahk\" mute;",
-    "runs": 0,
+    "runs": 3,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 9,
-    "lastRunAt": null,
-    "updatedAt": "2018-01-23T03:41:46.095Z"
+    "lastRunAt": "2018-01-29T18:30:48.940Z",
+    "updatedAt": "2018-01-29T17:18:24.752Z",
+    "params": "mute"
   },
   {
     "name": "Moon Moon music",
-    "voice": "(moon moon).*(music)",
+    "voice": "play (moon moon).*(music)",
     "script": "Start-Process \"C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe\" -ArgumentList \"/url https://www.youtube.com/watch?v=fEMNl-vjWpg\";",
     "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 10,
     "lastRunAt": null,
-    "updatedAt": "2018-01-23T03:41:27.488Z"
+    "updatedAt": "2018-01-29T17:18:34.677Z"
+  },
+  {
+    "name": "Test",
+    "script": "abcd",
+    "voice": null,
+    "id": 11,
+    "createdAt": "2018-01-29T15:22:13.280Z",
+    "updatedAt": "2018-01-29T15:22:13.280Z",
+    "runs": 1,
+    "lastRunAt": "2018-01-29T18:29:53.287Z"
   }
 ]

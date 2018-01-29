@@ -1,19 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/finally';
 
 import { environment } from '../../environments/environment';
 import { StoreService } from './store.service';
 import { Command } from '../_models/command';
+import { Activity } from '../_models/activity';
 
 @Injectable()
 export class CommandService {
-  constructor(private storeService: StoreService) { }
+  public activities: Activity[] = [];
 
-  public loadCommands(): Command[] {
-    const path = this.storeService.getDatabaseFilePath();
+  constructor(private storeService: StoreService) {
+    const path = this.getHistoryPath();
+    if (!window.fs.existsSync(path))
+      this.activities = [];
+    this.activities = window.jsonwrapper.readFileSync(path);
+  }
+
+  public load(): Command[] {
+    const path = this.getDatabasePath();
     if (!window.fs.existsSync(path))
       return [];
     const commands: Command[] = window.jsonwrapper.readFileSync(path);
@@ -23,44 +33,81 @@ export class CommandService {
     return commands;
   }
 
-  public saveCommands(commands: Command[]): void {
-    window.jsonwrapper.writeFileSync(this.storeService.getDatabaseFilePath(), commands, { spaces: 2 });
+  public save(commands: Command[]): void {
+    window.jsonwrapper.writeFileSync(this.getDatabasePath(), commands, { spaces: 2 });
   }
 
-  public extractCommands(voice: string): Command[] {
-    const allCommands = this.loadCommands();
+  public extractAndRun(voice: string): Observable<any> {
+    const allCommands = this.load();
     const commands: Command[] = [];
-    for (const cmd of allCommands) {
-      const reg = new RegExp(cmd.voice, 'i');
+    for (const command of allCommands) {
+      const reg = new RegExp(command.voice, 'i');
       const matches = reg.exec(voice);
       if (matches) {
-        cmd.params = matches.slice(1).join(',');
-        commands.push(cmd);
+        command.params = matches.slice(1).join(',');
+        command.lastRunAt = new Date();
+        command.runs = command.runs ? command.runs + 1 : 1;
+        commands.push(command);
       }
     }
-    return commands;
+    const activity: Activity = {
+      commands: commands,
+      voice: voice,
+      runAt: new Date()
+    } as Activity;
+    return this.internalRun(activity, ...commands)
+      .finally(() => this.save(allCommands));
   }
 
-  public runCommands(...commands: Command[]): Observable<any> {
-    if (!commands || commands.length === 0)
-      return;
+  public run(...commands: Command[]): Observable<any> {
+    const activity: Activity = {
+      commands: commands,
+      voice: '',
+      runAt: new Date()
+    } as Activity;
+    return this.internalRun(activity, ...commands);
+  }
 
-    const bak = console.log;
-    console.log = function () { };
+  private internalRun(activity: Activity, ...commands: Command[]): Observable<any> {
+    let obs: Observable<any>;
+    const ps = new window.powershell({ debugMsg: false });
 
-    const ps = new window.powershell();
-    for (const cmd of commands) {
-      ps.addCommand(cmd.script.format(...cmd.params ? cmd.params.split(',') : []) + ';');
+    if (!commands || commands.length === 0) {
+      obs = Observable.empty();
+      activity.isSuccess = false;
+      activity.response = 'No commands';
+    } else {
+      for (const cmd of commands) {
+        ps.addCommand(cmd.script.format(...cmd.params ? cmd.params.split(',') : []) + ';');
+      }
+      obs = Observable
+        .fromPromise(ps.invoke())
+        .do(res => {
+          activity.isSuccess = true;
+          activity.response = res;
+        }, err => {
+          activity.isSuccess = false;
+          activity.response = err;
+        });
     }
+    return obs.finally(() => {
+      this.activities = this.activities.concat(activity);
+      const hour = this.storeService.configuration.clearActivityAfterHours;
+      if (hour > 0) {
+        const tmp = new Date();
+        tmp.setTime(tmp.getTime() + (hour * 60 * 60 * 1000));
+        this.activities = this.activities.filter(o => o.runAt < tmp);
+      }
+      window.jsonwrapper.writeFileSync(this.getHistoryPath(), this.activities, { spaces: 2 });
+      ps.dispose();
+    });
+  }
 
-    const obs = Observable
-      .fromPromise(ps.invoke())
-      .mergeMap(val => ps.dispose())
-      .do(() => {
-        console.log = bak;
-      }, () => {
-        console.log = bak;
-      });
-    return obs;
+  private getDatabasePath(): string {
+    return window.path.join(this.storeService.getConfigLocation(), 'database.json');
+  }
+
+  private getHistoryPath(): string {
+    return window.path.join(this.storeService.getConfigLocation(), 'history.json');
   }
 }

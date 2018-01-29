@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { SortableModule } from 'ngx-bootstrap/sortable';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { MomentModule } from 'angular2-moment';
 import { HighlightModule } from 'ngx-highlightjs';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
@@ -32,6 +33,7 @@ import { PushBulletWatchService } from './_services/pushbullet.watch.service';
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
     SortableModule.forRoot(),
+    AccordionModule.forRoot(),
     HighlightModule.forRoot({
       theme: 'solarized-light'
     }),
