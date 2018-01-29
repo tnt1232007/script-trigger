@@ -8,7 +8,7 @@
         <button class="btn btn-link nav-link" [ngClass]="{'active': showTopPage}" (click)="showTopPage = true">Home</button>
       </li>
       <li class="nav-item">
-        <button class="btn btn-link nav-link" [ngClass]="{'active': !showTopPage}" (click)="showTopPage = false">Commands</button>
+        <button class="btn btn-link nav-link" [ngClass]="{'active': !showTopPage}" (click)="showTopPage = false">Scripts</button>
       </li>
     </ul>
     <ul class="navbar-nav">
@@ -28,6 +28,11 @@
         </button>
       </li>
       <li class="nav-item">
+        <button class="btn btn-link nav-link text-hover-light" (click)="showActivity = !showActivity">
+          <app-bytesize-icon id="i-activity" size="22" stroke="2"></app-bytesize-icon>
+        </button>
+      </li>
+      <li class="nav-item">
         <button class="btn btn-link nav-link text-hover-light" (click)="configModal.show()">
           <app-bytesize-icon id="i-settings" size="22" stroke="2"></app-bytesize-icon>
         </button>
@@ -35,7 +40,7 @@
     </ul>
   </nav>
   <div id="searchInput" [@searchState]="showFilter || keyword ? 'show' : 'hide'">
-    <input #searchInput type="search" class="form-control" [(ngModel)]="keyword" (ngModelChange)="filter()" (blur)="showFilter = false">
+    <input #searchInput type="search" class="form-control border-0 rounded-0" [(ngModel)]="keyword" (ngModelChange)="filter()" (blur)="showFilter = false">
     <button class="btn btn-link close" (click)="keyword = ''; showFilter = false; filter();">
       <app-bytesize-icon id="i-close" size="18"></app-bytesize-icon>
     </button>
@@ -43,7 +48,7 @@
 </header>
 
 <main>
-  <div [@homeStage]="showTopPage" *ngIf="!keyword" id="home" class="full-page d-flex align-items-center justify-content-center">
+  <div [@top]="showTopPage" id="home" class="full-page d-flex align-items-center justify-content-center">
     <div class="content-logo">
       <img alt="" src="assets/script.png">
     </div>
@@ -55,7 +60,7 @@
         <div class="col-6">
           <button class="btn btn-block btn-primary py-3 mb-3 text-relax text-uppercase" (click)="onNew(); commandForm.form.reset(); commandModal.show();">
             <app-bytesize-icon id="i-plus"></app-bytesize-icon>
-            New Command
+            New Script
           </button>
         </div>
         <div class="col-6">
@@ -68,23 +73,36 @@
       <div class="row" *ngIf="commands.length > 0">
         <div class="col-12 text-center">
           <button class="btn btn-link py-3 mb-3" (click)="showTopPage = false">
-            <small class="text-muted mr-3"><app-bytesize-icon id="i-chevron-bottom"></app-bytesize-icon></small>View Existing Commands</button>
+            <small class="text-muted mr-3"><app-bytesize-icon id="i-chevron-bottom"></app-bytesize-icon></small>View Existing Scripts</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div [@commandsStage]="!showTopPage" *ngIf="commands && commands.length > 0" id="commands" class="full-page scrollable">
-    <bs-sortable [(ngModel)]="commands" [itemTemplate]="itemTemplate" (drop)="afterSort()" wrapperClass="list-group list-group-flush"
-      itemClass="sortable-item list-group-item list-group-item-action flex-column align-items-start"></bs-sortable>
+  <div [@commands]="!showTopPage" *ngIf="commands.length > 0" id="commands">
+    <div [@listWithActivity]="showActivity" class="content-wrapper full-page scrollable">
+      <bs-sortable [(ngModel)]="commands" [itemTemplate]="commandTemplate" (drop)="afterSort()" wrapperClass="list-group list-group-flush"
+        itemClass="sortable-item list-group-item list-group-item-action flex-column align-items-start"></bs-sortable>
 
-    <button type="button" class="btn btn-block btn-outline-danger border-0 rounded-0 py-4" mwlConfirmationPopover popoverTitle="Are you sure?"
-      popoverMessage="Reset all Runs and Last run statistics" placement="top" appendToBody="true" (confirm)="resetAllStats()">Reset Runs</button>
+      <div class="row no-gutters">
+        <div class="col-6">
+          <button type="button" class="btn btn-block btn-outline-warning border-0 rounded-0 py-4" mwlConfirmationPopover popoverTitle="Are you sure?"
+            popoverMessage="Reset all Runs and Last run statistics" placement="top" appendToBody="true" (confirm)="resetAll()">Reset All</button>
+        </div>
+        <div class="col-6">
+          <button type="button" class="btn btn-block btn-outline-danger border-0 rounded-0 py-4" mwlConfirmationPopover popoverTitle="Are you sure?"
+            popoverMessage="Delete all commands" placement="top" appendToBody="true" (confirm)="deleteAll()">Delete All</button>
+        </div>
+      </div>
+    </div>
+    <div [@activity]="showActivity" class="sidebar-wrapper full-page scrollable">
+      <!-- Activity -->
+    </div>
   </div>
 </main>
 
 <footer>
-  <ng-template #itemTemplate let-item="item">
+  <ng-template #commandTemplate let-item="item">
     <div class="d-flex w-100">
       <h5 class="text-primary clickable" (click)="onEdit(item.value); commandModal.show();">
         {{item.value.id}}. {{item.value.name}}
@@ -224,24 +242,6 @@
             </button>
           </div>
           <div class="modal-body">
-            <!-- <div class="form-group row">
-              <label for="inputWatchLocation" class="col-sm-3 col-form-label">Watch Location</label>
-              <div class="col-sm-9">
-                <div class="input-group">
-                  <input [(ngModel)]="configuration.watchLocation" type="text" class="form-control" id="inputWatchLocation" name="inputWatchLocation">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" (click)="configuration.watchLocation = selectItem('openDirectory')">Browse</button>
-                  </div>
-                </div>
-                <small class="form-text text-muted">Activate command by voice, file name default to computer name:
-                  <a class="text-muted" placement="bottom" tabindex="-1" (click)="openItem(storeService.getWatchFilePath())" [tooltip]="storeService.getWatchFilePath()"
-                    containerClass="nowrap">
-                    {{storeService.getWatchFileName()}}
-                    <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
-                  </a>
-                </small>
-              </div>
-            </div> -->
             <div class="form-group row">
               <label for="inputPushbulletApiKey" class="col-sm-3 col-form-label">Pushbullet Api Key</label>
               <div class="col-sm-9">

@@ -24,7 +24,7 @@ import { IWatchService } from './_services/interface/watch.service';
       transition('hide => show', animate('.4s ease-in', style({ transform: 'translateY(0)' }))),
       transition('show => hide', animate('.4s 100ms ease-in', style({ transform: 'translateY(-120%)' })))
     ]),
-    trigger('homeStage', [
+    trigger('top', [
       state('true', style({
         transform: 'translateY(0)'
       })),
@@ -34,7 +34,7 @@ import { IWatchService } from './_services/interface/watch.service';
       transition('false => true', animate('.4s ease-in', style({ transform: 'translateY(0)' }))),
       transition('true => false', animate('.4s 100ms ease-in', style({ transform: 'translateY(-100%)' })))
     ]),
-    trigger('commandsStage', [
+    trigger('commands', [
       state('true', style({
         transform: 'translateY(-100%)'
       })),
@@ -43,11 +43,32 @@ import { IWatchService } from './_services/interface/watch.service';
       })),
       transition('false => true', animate('.4s ease-in', style({ transform: 'translateY(-100%)' }))),
       transition('true => false', animate('.4s 100ms ease-in', style({ transform: 'translateY(0)' })))
+    ]),
+    trigger('listWithActivity', [
+      state('true', style({
+        width: '80vw'
+      })),
+      state('false', style({
+        width: '100vw'
+      })),
+      transition('true => false', animate('.4s ease-in', style({ width: '100vw' }))),
+      transition('false => true', animate('.4s ease-in', style({ width: '80vw' })))
+    ]),
+    trigger('activity', [
+      state('true', style({
+        width: '20vw'
+      })),
+      state('false', style({
+        width: '0'
+      })),
+      transition('false => true', animate('.4s ease-in', style({ width: '20vw' }))),
+      transition('true => false', animate('.4s ease-in', style({ width: '0' })))
     ])
   ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   public showTopPage = true;
+  public showActivity = false;
   public showFilter: boolean;
   public keyword: string;
   public configuration: Configuration;
@@ -102,30 +123,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.command = {} as Command;
   }
 
-  // public onDuplicate(command: Command): void {
-  //   const name = command.name.replace(/[0-9]+$/g, '').trim();
-  //   let index = 2;
-  //   while (this.commands.some(o => o.name === `${name} ${index}`))
-  //     index += 1;
-  //   this.command = {
-  //     name: `${name} ${index}`,
-  //     script: command.script,
-  //     voice: command.voice,
-  //     params: command.params
-  //   } as Command;
-  // }
-
   public onEdit(command: Command): void {
     this.command = { ...command };
   }
 
   public trigger(command: Command): void {
+    command.lastRunAt = new Date();
+    command.runs = command.runs ? command.runs + 1 : 1;
     this.commandService.runCommands(command).subscribe(o => {
-      command.lastRunAt = new Date();
-      command.runs = command.runs ? command.runs + 1 : 1;
       this.commandService.saveCommands(this.commands);
     }, err => {
       window.logger.error(err);
+      this.commandService.saveCommands(this.commands);
     });
   }
 
@@ -168,11 +177,16 @@ export class AppComponent implements OnInit, OnDestroy {
     this.commandService.saveCommands(this.commands);
   }
 
-  public resetAllStats(): void {
+  public resetAll(): void {
     this.commands.forEach(command => {
       command.lastRunAt = null;
       command.runs = 0;
     });
+    this.commandService.saveCommands(this.commands);
+  }
+
+  public deleteAll(): void {
+    this.commands = [];
     this.commandService.saveCommands(this.commands);
   }
 

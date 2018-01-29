@@ -6,6 +6,7 @@
 }
 
 .scrollable {
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 
@@ -34,7 +35,6 @@ header {
   
     input[type=search] {
       width: 20vw;
-      border: none;
       padding: 9px 20px;
       box-shadow: $popover-box-shadow;
   
@@ -79,6 +79,18 @@ main {
       small {
         font-size: 20%;
       }
+    }
+  }
+
+  #commands {
+    .sidebar-wrapper {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: $zindex-fixed;
+      width: 20vw;
+      height: 100%;
+      background: #000;
     }
   }
 }
