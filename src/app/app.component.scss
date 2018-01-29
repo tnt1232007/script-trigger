@@ -33,7 +33,7 @@ button.close {
     font-size: 18vh;
   }
 
-  a.btn {
+  button, a.btn {
     font-size: 3vh;
   }
 
@@ -49,15 +49,27 @@ nav {
 #searchInput {
   position: fixed;
   top: 60px;
-  right: 2px;
-  z-index: $zindex-fixed;
+  right: 0;
+  z-index: $zindex-sticky;
 
-  padding: 9px 20px;
-  border: none;
-  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3); // .z-depth-2
+  input[type=search] {
+    width: 20vw;
+    border: none;
+    padding: 9px 20px;
+    box-shadow: $popover-box-shadow;
 
-  &:focus {
-    outline: none;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.has-clear {
+  .clear {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
   }
 }
 

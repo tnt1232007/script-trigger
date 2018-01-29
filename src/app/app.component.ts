@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SortableComponent } from 'ngx-bootstrap/sortable';
 
 import { Configuration } from './_models/configuration';
@@ -10,7 +11,20 @@ import { IWatchService } from './_services/interface/watch.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [
+    trigger('searchState', [
+      state('show', style({
+        transform: 'translateY(0)',
+        opacity: 0.75
+      })),
+      state('hide', style({
+        transform: 'translateY(-120%)'
+      })),
+      transition('hide => show', animate('.4s ease-in', style({ transform: 'translateY(0)' }))),
+      transition('show => hide', animate('.4s 100ms ease-in', style({ transform: 'translateY(-120%)' })))
+    ])
+  ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   public showFilter: boolean;
