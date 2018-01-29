@@ -67,6 +67,8 @@ declare global {
     os: any;
     fs: any;
     path: any;
+
+    logger: any;
     powershell: any;
     fswrapper: any;
     jsonwrapper: any;

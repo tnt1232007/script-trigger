@@ -5,71 +5,81 @@
   cursor: pointer;
 }
 
+.scrollable {
+  overflow-y: scroll;
+}
+
 .text-relax {
   letter-spacing: 2px;
 }
 
-.full-page {
-  height: 100vh;
-}
-
-pre {
-  white-space: pre-line;
-}
-
-button.close {
+.close {
   outline: none;
 }
 
-.content-logo {
-  img {
-    width: 50vh;
-    height: 50vh;
-  }
+.text-wrap {
+  white-space: pre-wrap;
 }
 
-.content-header {
-  h1 {
-    font-size: 18vh;
+header {
+  nav {
+    height: 60px;
   }
 
-  button, a.btn {
-    font-size: 3vh;
-  }
+  #searchInput {
+    position: fixed;
+    top: 60px;
+    right: 0;
+    z-index: $zindex-sticky;
+  
+    input[type=search] {
+      width: 20vw;
+      border: none;
+      padding: 9px 20px;
+      box-shadow: $popover-box-shadow;
+  
+      &:focus {
+        outline: none;
+      }
+    }
 
-  small {
-    font-size: 20%;
-  }
-}
-
-nav {
-  height: 60px;
-}
-
-#searchInput {
-  position: fixed;
-  top: 60px;
-  right: 0;
-  z-index: $zindex-sticky;
-
-  input[type=search] {
-    width: 20vw;
-    border: none;
-    padding: 9px 20px;
-    box-shadow: $popover-box-shadow;
-
-    &:focus {
-      outline: none;
+    .close {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 15px;
     }
   }
 }
 
-.has-clear {
-  .clear {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
+main {
+  margin-top: 60px;
+
+  .full-page {
+    height: calc(100vh - 60px);
+  }
+
+  #home {
+    .content-logo {
+      img {
+        width: 50vh;
+        height: 50vh;
+      }
+    }
+    
+    .content-header {
+      h1 {
+        font-size: 18vh;
+      }
+    
+      button, a.btn {
+        font-size: 3vh;
+      }
+    
+      small {
+        font-size: 20%;
+      }
+    }
   }
 }
 
@@ -98,18 +108,4 @@ nav {
       visibility: inherit;
     }
   }
-}
-
-.navbar.fixed-top,
-.navbar.fixed-bottom {
-  padding-right: 16px;
-}
-
-:host-context(.modal-open) .navbar.fixed-top.fixed-padding,
-:host-context(.modal-open) .navbar.fixed-bottom.fixed-padding {
-  padding-right: 35px;
-}
-
-.fixed-padding-top {
-  padding-top: 59px;
 }

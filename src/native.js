@@ -10,4 +10,5 @@ window.powershell = require('node-powershell');
 window.fswrapper = require('chokidar');
 window.jsonwrapper = require('jsonfile');
 window.store = require('electron-store');
+window.logger = require('electron').remote.require('electron-log');
 window.pushbullet = require('pushbullet');

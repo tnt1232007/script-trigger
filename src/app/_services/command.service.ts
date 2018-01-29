@@ -45,9 +45,8 @@ export class CommandService {
     if (!commands || commands.length === 0)
       return;
 
-    const consoles = [console.log, console.warn];
+    const bak = console.log;
     console.log = function () { };
-    console.warn = function () { };
 
     const ps = new window.powershell();
     for (const cmd of commands) {
@@ -58,11 +57,9 @@ export class CommandService {
       .fromPromise(ps.invoke())
       .mergeMap(val => ps.dispose())
       .do(() => {
-        console.log = consoles[0];
-        console.warn = consoles[1];
+        console.log = bak;
       }, () => {
-        console.log = consoles[0];
-        console.warn = consoles[1];
+        console.log = bak;
       });
     return obs;
   }

@@ -17,3 +17,7 @@ $text-muted: $secondary;
 @each $color, $value in $theme-colors {
   @include text-hover-variant(".text-hover-#{$color}", $value);
 }
+
+body {
+  overflow-y: hidden;
+}

@@ -23,24 +23,37 @@ import { IWatchService } from './_services/interface/watch.service';
       })),
       transition('hide => show', animate('.4s ease-in', style({ transform: 'translateY(0)' }))),
       transition('show => hide', animate('.4s 100ms ease-in', style({ transform: 'translateY(-120%)' })))
+    ]),
+    trigger('homeStage', [
+      state('true', style({
+        transform: 'translateY(0)'
+      })),
+      state('false', style({
+        transform: 'translateY(-100%)'
+      })),
+      transition('false => true', animate('.4s ease-in', style({ transform: 'translateY(0)' }))),
+      transition('true => false', animate('.4s 100ms ease-in', style({ transform: 'translateY(-100%)' })))
+    ]),
+    trigger('commandsStage', [
+      state('true', style({
+        transform: 'translateY(-100%)'
+      })),
+      state('false', style({
+        transform: 'translateY(0)'
+      })),
+      transition('false => true', animate('.4s ease-in', style({ transform: 'translateY(-100%)' }))),
+      transition('true => false', animate('.4s 100ms ease-in', style({ transform: 'translateY(0)' })))
     ])
   ]
 })
 export class AppComponent implements OnInit, OnDestroy {
+  public showTopPage = true;
   public showFilter: boolean;
   public keyword: string;
   public configuration: Configuration;
   public command: Command = {} as Command;
   public commands: Command[];
   public allCommands: Command[];
-  public easeInOutExpoEasing: any = {
-    ease: (t: number, b: number, c: number, d: number): number => {
-      if (t === 0) return b;
-      if (t === d) return b + c;
-      if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
-      return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
-    }
-  };
   public jsonFilter: any = [
     { name: 'JSON', extensions: ['json'] },
     { name: 'All Files', extensions: ['*'] }
@@ -112,7 +125,7 @@ export class AppComponent implements OnInit, OnDestroy {
       command.runs = command.runs ? command.runs + 1 : 1;
       this.commandService.saveCommands(this.commands);
     }, err => {
-      console.error(err);
+      window.logger.error(err);
     });
   }
 

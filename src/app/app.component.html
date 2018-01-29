@@ -1,18 +1,15 @@
 <header>
-  <nav class="navbar navbar-expand navbar-dark bg-primary fixed-top" [ngClass]="{'fixed-padding': commands.length > 0}">
-    <a class="navbar-brand" href="#top" draggable="false">
+  <nav class="navbar navbar-expand navbar-dark bg-primary fixed-top">
+    <a class="navbar-brand">
       <img src="assets/script.png" width="30" height="30" class="d-inline-block align-top" alt="">
     </a>
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#top">Home</a>
+        <button class="btn btn-link nav-link" [ngClass]="{'active': showTopPage}" (click)="showTopPage = true">Home</button>
       </li>
       <li class="nav-item">
-        <a class="nav-link" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#commands">Commands</a>
+        <button class="btn btn-link nav-link" [ngClass]="{'active': !showTopPage}" (click)="showTopPage = false">Commands</button>
       </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#examples">Examples</a>
-      </li> -->
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -37,16 +34,16 @@
       </li>
     </ul>
   </nav>
-  <div id="searchInput" class="has-clear" [@searchState]="showFilter || keyword ? 'show' : 'hide'">
+  <div id="searchInput" [@searchState]="showFilter || keyword ? 'show' : 'hide'">
     <input #searchInput type="search" class="form-control" [(ngModel)]="keyword" (ngModelChange)="filter()" (blur)="showFilter = false">
-    <button class="btn btn-link clear" (click)="keyword = ''; showFilter = false; filter();">
-      <app-bytesize-icon id="i-close" size="14" stroke="3"></app-bytesize-icon>
+    <button class="btn btn-link close" (click)="keyword = ''; showFilter = false; filter();">
+      <app-bytesize-icon id="i-close" size="18"></app-bytesize-icon>
     </button>
   </div>
 </header>
 
 <main>
-  <div *ngIf="!keyword" id="top" class="full-page d-flex align-items-center justify-content-center">
+  <div [@homeStage]="showTopPage" *ngIf="!keyword" id="home" class="full-page d-flex align-items-center justify-content-center">
     <div class="content-logo">
       <img alt="" src="assets/script.png">
     </div>
@@ -70,22 +67,19 @@
       </div>
       <div class="row" *ngIf="commands.length > 0">
         <div class="col-12 text-center">
-          <a class="btn btn-link py-3 mb-3" pageScroll [pageScrollEasing]="easeInOutExpoEasing" href="#commands">
-            <small class="text-muted mr-3">
-              <app-bytesize-icon id="i-chevron-bottom"></app-bytesize-icon>
-            </small>View Existing Commands
-          </a>
+          <button class="btn btn-link py-3 mb-3" (click)="showTopPage = false">
+            <small class="text-muted mr-3"><app-bytesize-icon id="i-chevron-bottom"></app-bytesize-icon></small>View Existing Commands</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div *ngIf="commands && commands.length > 0" id="commands" class="fixed-padding-top">
+  <div [@commandsStage]="!showTopPage" *ngIf="commands && commands.length > 0" id="commands" class="full-page scrollable">
     <bs-sortable [(ngModel)]="commands" [itemTemplate]="itemTemplate" (drop)="afterSort()" wrapperClass="list-group list-group-flush"
       itemClass="sortable-item list-group-item list-group-item-action flex-column align-items-start"></bs-sortable>
 
     <button type="button" class="btn btn-block btn-outline-danger border-0 rounded-0 py-4" mwlConfirmationPopover popoverTitle="Are you sure?"
-      popoverMessage="Reset all Runs and Last run statistics" placement="top" (confirm)="resetAllStats()">Reset Runs</button>
+      popoverMessage="Reset all Runs and Last run statistics" placement="top" appendToBody="true" (confirm)="resetAllStats()">Reset Runs</button>
   </div>
 </main>
 
@@ -98,7 +92,7 @@
       <small class="ml-auto" *ngIf="item.value.lastRunAt">{{item.value.lastRunAt | amTimeAgo}}</small>
     </div>
     <div class="d-flex w-100 align-items-center">
-      <pre class="my-1 mr-3"><code highlight [code]="item.value.script"></code></pre>
+      <pre class="my-1 mr-3"><code highlight class="text-wrap" [code]="item.value.script"></code></pre>
       <button type="button" class="btn btn-light rounded-0 showOnHover text-muted text-hover-warning" (click)="onEdit(item.value); commandModal.show();">
         <app-bytesize-icon id="i-edit"></app-bytesize-icon>
       </button>
@@ -106,7 +100,8 @@
         <app-bytesize-icon id="i-clipboard"></app-bytesize-icon>
       </button> -->
       <button type="button" class="btn btn-light rounded-0 showOnHover text-muted text-hover-danger mr-3" mwlConfirmationPopover
-        popoverTitle="Are you sure?" popoverMessage="Delete '{{item.value.name}}' permanently" (confirm)="delete(item.value)">
+        popoverTitle="Are you sure?" popoverMessage="Delete '{{item.value.name}}' permanently" (confirm)="delete(item.value)"
+        placement="{{item.value.id === 1 ? 'bottom' : 'top'}}">
         <app-bytesize-icon id="i-trash"></app-bytesize-icon>
       </button>
       <div class="btn-group ml-auto">
