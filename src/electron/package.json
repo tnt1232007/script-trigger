@@ -1,8 +1,8 @@
 {
   "name": "script-trigger",
   "productName": "ScriptTrigger",
-  "description": "",
-  "version": "3.4.0",
+  "description": "Create and manage script. Allow remote control Windows machine through Pushbullet and IFTTT.",
+  "version": "3.4.1",
   "author": {
     "name": "TNT",
     "email": "tnt1232007@gmail.com"
@@ -20,31 +20,5 @@
     "jsonfile": "^4.0.0",
     "node-powershell": "^3.3.1",
     "pushbullet": "^2.1.0"
-  },
-  "build": {
-    "appId": "com.scriptrigger.tnt",
-    "productName": "ScriptTrigger",
-    "copyright": "Copyright © 2018 TNT",
-    "compression": "maximum",
-    "directories": {
-      "buildResources": "dist",
-      "output": "packages"
-    },
-    "win": {
-      "target": [
-        "nsis",
-        "portable",
-        "zip"
-      ],
-      "icon": "favicon.ico"
-    },
-    "nsis": {
-      "oneClick": "false",
-      "perMachine": "true",
-      "allowToChangeInstallationDirectory": "true"
-    },
-    "portable": {
-      "requestExecutionLevel": "highest"
-    }
   }
 }

@@ -175,6 +175,10 @@ export class AppComponent implements OnInit, OnDestroy {
       return;
     const commands: Command[] = window.jsonwrapper.readFileSync(path);
     this.commands.push(...commands);
+    this.commands.forEach(command => {
+      command.lastRunAt = null;
+      command.runs = 0;
+    });
     this.commandService.save(this.commands);
     this.sortableComponent.writeValue(this.commands);
   }

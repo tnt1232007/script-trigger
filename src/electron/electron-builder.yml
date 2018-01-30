@@ -1,0 +1,19 @@
+appId: com.scriptrigger.tnt
+copyright: Copyright © 2018 TNT
+productName: ScriptTrigger
+compression: maximum
+directories:
+  buildResources: dist
+  output: packages
+win:
+  target: 
+    - nsis
+    - portable
+  icon: favicon.ico
+nsis:
+  oneClick: false
+  perMachine: true
+  allowToChangeInstallationDirectory: true
+portable:
+  requestExecutionLevel: highest
+  artifactName: ${productName}.portable.${ext}
