@@ -13,13 +13,18 @@ import { Activity } from '../_models/activity';
 
 @Injectable()
 export class CommandService {
-  public activities: Activity[] = [];
+  private activities: Activity[];
 
   constructor(private storeService: StoreService) {
     const path = this.getHistoryPath();
     if (!window.fs.existsSync(path))
       this.activities = [];
-    window.jsonwrapper.readFile(path, (err, obj) => this.activities = obj);
+    window.jsonwrapper.readFile(path, (err, obj) => {
+      this.activities = obj || [];
+      this.activities.forEach(activity => {
+        activity.runAt = new Date(activity.runAt);
+      });
+    });
   }
 
   public load(): Command[] {
@@ -87,16 +92,16 @@ export class CommandService {
           activity.response = res;
         }, err => {
           activity.isSuccess = false;
-          activity.response = err;
+          activity.response = err.replace(/.\[31m/g, '').replace(/.\[39m/g, '');
         });
     }
     return obs.finally(() => {
       this.activities = this.activities.concat(activity);
-      const hour = this.storeService.configuration.clearActivityAfterHours;
+      const hour = this.storeService.load().clearActivityAfterHours;
       if (hour > 0) {
         const tmp = new Date();
-        tmp.setTime(tmp.getTime() + (hour * 60 * 60 * 1000));
-        this.activities = this.activities.filter(o => o.runAt < tmp);
+        tmp.setTime(tmp.getTime() - (hour * 60 * 60 * 1000));
+        this.activities = this.activities.filter(o => o.runAt >= tmp);
       }
       window.jsonwrapper.writeFileSync(this.getHistoryPath(), this.activities, { spaces: 2 });
       ps.dispose();

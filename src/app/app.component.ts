@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SortableComponent } from 'ngx-bootstrap/sortable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/finally';
 
 import { Configuration } from './_models/configuration';
@@ -8,7 +9,7 @@ import { Command } from './_models/command';
 import { Activity } from './_models/activity';
 import { StoreService } from './_services/store.service';
 import { CommandService } from './_services/command.service';
-import { IWatchService } from './_services/interface/watch.service';
+import { PushBulletService } from './_services/pushbullet.service';
 
 @Component({
   selector: 'app-root',
@@ -89,20 +90,20 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     public storeService: StoreService,
     public commandService: CommandService,
-    public watchService: IWatchService) { }
+    public pushbulletService: PushBulletService) { }
 
   public ngOnInit(): void {
     this.showFilter = false;
     this.keyword = '';
-    this.configuration = this.storeService.fetch();
+    this.configuration = this.storeService.load();
     this.allCommands = this.commands = this.commandService.load();
-    this.watchService.startWatching(message => {
+    this.pushbulletService.startWatching().subscribe(message => {
       this.commandService.extractAndRun(message).subscribe();
     });
   }
 
   public ngOnDestroy(): void {
-    this.watchService.stopWatching();
+    this.pushbulletService.stopWatching();
   }
 
   public getAppVersion() {
@@ -200,9 +201,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.commandService.save(this.commands);
   }
 
+  public verifyPushbulletApiKey(form: any): void {
+    form.controls['inputPushbulletApiKey'].setErrors({ 'invalid': null });
+    this.pushbulletService.verify(this.configuration.pushbulletApiKey).subscribe(null,
+      err => form.controls['inputPushbulletApiKey'].setErrors({ 'invalid': err.message }));
+  }
+
+  public configFormCancel(): void {
+    this.configuration = this.storeService.load();
+  }
   public configFormSubmit(): void {
-    this.storeService.push(this.configuration);
-    this.watchService.stopWatching();
+    this.storeService.save(this.configuration);
+    this.pushbulletService.stopWatching();
     this.ngOnInit();
   }
 

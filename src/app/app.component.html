@@ -40,7 +40,7 @@
     </ul>
   </nav>
   <div id="searchInput" [@searchState]="showFilter || keyword ? 'show' : 'hide'">
-    <input #searchInput type="search" class="form-control border-0 rounded-0" [(ngModel)]="keyword" (ngModelChange)="filter()" (blur)="showFilter = false">
+    <input #searchInput [(ngModel)]="keyword" (ngModelChange)="filter()" (blur)="showFilter = false" type="search" class="form-control border-0 rounded-0">
     <button class="btn btn-link close" (click)="keyword = ''; showFilter = false; filter();">
       <app-bytesize-icon id="i-close" size="18"></app-bytesize-icon>
     </button>
@@ -48,35 +48,36 @@
 </header>
 
 <main>
-  <div [@top]="showTopPage" id="home" class="full-page d-flex align-items-center justify-content-center">
-    <div class="content-logo">
-      <img alt="" src="assets/script.png">
-    </div>
-    <div class="content-header d-flex flex-column justify-content-center">
-      <h1 class="font-weight-light mb-3">
-        ScriptTrigger<small>v{{getAppVersion()}}</small>
-      </h1>
-      <div class="row">
-        <div class="col-6">
-          <button class="btn btn-block btn-primary py-3 mb-3 text-relax text-uppercase" (click)="onNew(); commandForm.form.reset(); commandModal.show();">
-            <app-bytesize-icon id="i-plus"></app-bytesize-icon>
-            New Script
-          </button>
-        </div>
-        <div class="col-6">
-          <button class="btn btn-block btn-outline-primary py-3 mb-3 text-relax text-uppercase" (click)="configModal.show()">
-            <app-bytesize-icon id="i-settings"></app-bytesize-icon>
-            Settings
-          </button>
-        </div>
+  <div [@top]="showTopPage" id="home" class="full-page d-flex flex-column justify-content-between">
+    <div></div>
+    <div class="d-flex justify-content-center">
+      <div class="content-logo">
+        <img alt="" src="assets/script.png">
       </div>
-      <div class="row" *ngIf="commands.length > 0">
-        <div class="col-12 text-center">
-          <button class="btn btn-link py-3 mb-3" (click)="showTopPage = false">
-            <small class="text-muted mr-3"><app-bytesize-icon id="i-chevron-bottom"></app-bytesize-icon></small>View Existing Scripts</button>
+      <div class="content-header d-flex flex-column justify-content-center">
+        <div class="mb-3">
+          <h1 class="font-weight-light d-inline">ScriptTrigger</h1>
+          <h1 class="font-weight-light d-inline">
+            <small>v{{getAppVersion()}}</small>
+          </h1>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <button class="btn btn-block btn-primary py-3 mb-3 text-relax text-uppercase" (click)="onNew(); commandForm.form.reset(); commandModal.show();">
+              Create new Script
+            </button>
+          </div>
+          <div class="col-6">
+            <button class="btn btn-block btn-outline-primary py-3 mb-3 text-relax text-uppercase" (click)="configModal.show()">
+              Setting up
+            </button>
+          </div>
         </div>
       </div>
     </div>
+    <button *ngIf="commands.length > 0" class="btn btn-block btn-light border-0 rounded-0 py-4" (click)="showTopPage = false">
+      <app-bytesize-icon id="i-chevron-bottom" size="26"></app-bytesize-icon>
+    </button>
   </div>
 
   <div [@commands]="!showTopPage" *ngIf="commands.length > 0" id="commands">
@@ -84,7 +85,7 @@
       <bs-sortable [(ngModel)]="commands" [itemTemplate]="commandTemplate" (drop)="afterSort()" wrapperClass="list-group list-group-flush"
         itemClass="sortable-item list-group-item list-group-item-action flex-column align-items-start"></bs-sortable>
 
-      <div class="row no-gutters">
+      <div *ngIf="!keyword" class="row no-gutters">
         <div class="col-6">
           <button type="button" class="btn btn-block btn-outline-warning border-0 rounded-0 py-4" mwlConfirmationPopover popoverTitle="Are you sure?"
             popoverMessage="Reset all Runs and Last run statistics" placement="top" appendToBody="true" (confirm)="resetAll()">Reset All</button>
@@ -100,7 +101,7 @@
         <div accordion-heading class="d-flex justify-content-between">
           <small>
             <app-bytesize-icon id="i-chevron-bottom" size="10" stroke="3"></app-bytesize-icon>
-            {{ activity.runAt | amCalendar:{sameDay:'h:mm A'} }}
+            {{ activity.runAt | amTimeAgo }}
           </small>
           <span *ngIf="activity.isSuccess" class="badge badge-success w-25 rounded-0">Success</span>
           <span *ngIf="!activity.isSuccess" class="badge badge-danger w-25 rounded-0">Failed</span>
@@ -111,12 +112,14 @@
         <div *ngIf="activity.commands.length === 0" class="lead w-100">
           <em>Scripts not found</em>
         </div>
-        <small *ngIf="!activity.voice" class="px-2">
+        <div *ngIf="!activity.voice" class="px-2 small">
           triggered manually
-        </small>
-        <small *ngIf="activity.voice" class="px-2">
-          by Voice: <em>{{activity.voice}}</em>
-        </small>
+        </div>
+        <div *ngIf="activity.voice" class="px-2 small">
+          by Voice:
+          <em>{{activity.voice}}</em>
+        </div>
+        <div *ngIf="activity.response" class="small mt-3"><pre class="mb-0"><code class="text-danger text-wrap">{{activity.response}}</code></pre></div>
       </accordion-group>
     </accordion>
   </div>
@@ -212,7 +215,7 @@
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="command.id > 0">
+              <ng-container *ngIf="command.id">
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label">Runs</label>
                   <div class="col-sm-10">
@@ -256,10 +259,13 @@
       <form #configForm="ngForm">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Configuration</h5>
-            <a placement="bottom" tabindex="-1" containerClass="nowrap" (click)="openItem(storeService.getConfigLocation())" [tooltip]="storeService.getConfigLocation()">
-              <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
-            </a>
+            <h5 class="modal-title">
+              Configuration
+              <a href="#" class="text-muted small" placement="bottom" tabindex="-1" containerClass="nowrap" [tooltip]="storeService.getConfigLocation()"
+                (click)="openItem(storeService.getConfigLocation())">
+                <app-bytesize-icon id="i-external" size="12" width="2"></app-bytesize-icon>
+              </a>
+            </h5>
             <button type="button" class="close" (click)="configModal.hide();">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -269,9 +275,14 @@
               <label for="inputClearActivityAfterHours" class="col-sm-3 col-form-label">Number of hours keep activity in history</label>
               <div class="col-sm-9">
                 <div class="input-group">
-                  <input [(ngModel)]="configuration.clearActivityAfterHours" type="number" class="form-control" id="inputClearActivityAfterHours" name="inputClearActivityAfterHours">
+                  <input [(ngModel)]="configuration.clearActivityAfterHours" type="number" class="form-control" id="inputClearActivityAfterHours"
+                    name="inputClearActivityAfterHours" [ngClass]="{'is-valid': clearActivityAfterHours.valid, 'is-invalid': !clearActivityAfterHours.valid}"
+                    #clearActivityAfterHours="ngModel" min="0" pattern="\d+">
+                  <div [hidden]="clearActivityAfterHours.valid" class="invalid-feedback">
+                    Invalid value, please provide a positive number
+                  </div>
                 </div>
-                <small class="form-text">
+                <small class="form-text text-muted">
                   Default to 48 hours, set 0 to keep all history
                 </small>
               </div>
@@ -280,7 +291,12 @@
               <label for="inputPushbulletApiKey" class="col-sm-3 col-form-label">Pushbullet Api Key</label>
               <div class="col-sm-9">
                 <div class="input-group">
-                  <input [(ngModel)]="configuration.pushbulletApiKey" type="text" class="form-control" id="inputPushbulletApiKey" name="inputPushbulletApiKey">
+                  <input [(ngModel)]="configuration.pushbulletApiKey" type="text" class="form-control" id="inputPushbulletApiKey" name="inputPushbulletApiKey"
+                    [ngClass]="{'is-valid': pushbulletApiKey.valid, 'is-invalid': !pushbulletApiKey.valid}" #pushbulletApiKey="ngModel"
+                    (ngModelChange)="verifyPushbulletApiKey(configForm.form)">
+                  <div [hidden]="pushbulletApiKey.valid" class="invalid-feedback">
+                    Invalid key, please provide a valid Pushbullet access token
+                  </div>
                 </div>
                 <small class="form-text">
                   <a class="text-muted" placement="bottom" tabindex="-1" href="https://www.pushbullet.com/#settings/account" tooltip="https://www.pushbullet.com/#settings/account"
@@ -293,7 +309,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary ml-auto" (click)="configModal.hide()">Close</button>
+            <button type="button" class="btn btn-secondary ml-auto" (click)="configFormCancel(); configModal.hide()">Close</button>
             <button type="button" class="btn btn-primary" (click)="configForm.form.valid && configFormSubmit(); configModal.hide();">Save</button>
           </div>
         </div>

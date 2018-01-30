@@ -5,7 +5,6 @@ import { Configuration } from '../_models/configuration';
 @Injectable()
 export class StoreService {
   private store: any;
-  public configuration: Configuration;
 
   constructor() {
     this.store = new window.store({
@@ -13,15 +12,11 @@ export class StoreService {
     });
   }
 
-  public fetch(): any {
-    if (!this.configuration)
-      this.configuration = this.store.store;
-    if (!this.configuration.clearActivityAfterHours)
-      this.configuration.clearActivityAfterHours = 48;
-    return this.configuration;
+  public load(): any {
+    return this.store.store;
   }
 
-  public push(jsonObj: any): void {
+  public save(jsonObj: any): void {
     this.store.set(jsonObj);
   }
 

@@ -14,10 +14,9 @@ import { ElasticModule } from 'angular2-elastic';
 
 import { ByteSizeIconComponent } from './nested-components/bytesize-icon/bytesize-icon.component';
 import { AppComponent } from './app.component';
-import { IWatchService } from './_services/interface/watch.service';
 import { StoreService } from './_services/store.service';
 import { CommandService } from './_services/command.service';
-import { PushBulletWatchService } from './_services/pushbullet.watch.service';
+import { PushBulletService } from './_services/pushbullet.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +44,7 @@ import { PushBulletWatchService } from './_services/pushbullet.watch.service';
   providers: [
     StoreService,
     CommandService,
-    { provide: IWatchService, useClass: PushBulletWatchService}
+    PushBulletService
   ],
   bootstrap: [AppComponent]
 })
