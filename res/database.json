@@ -3,20 +3,20 @@
     "name": "Shutdown",
     "voice": "(shutdown|turn off)",
     "script": "shutdown /s /t 60 /c 'Shutdown in 60 seconds';",
-    "runs": 1,
+    "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 1,
-    "lastRunAt": "2018-01-29T18:25:34.775Z",
+    "lastRunAt": null,
     "updatedAt": "2018-01-30T04:18:48.698Z"
   },
   {
     "name": "Restart",
     "voice": "restart",
     "script": "shutdown /r /t 60 /c 'Restart in 60 seconds';",
-    "runs": 1,
+    "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 2,
-    "lastRunAt": "2018-01-30T04:35:56.423Z",
+    "lastRunAt": null,
     "updatedAt": "2018-01-30T04:19:02.614Z"
   },
   {
@@ -24,18 +24,18 @@
     "script": "shutdown /a",
     "voice": "cancel (shutdown|restart)",
     "id": 3,
-    "lastRunAt": "2018-01-30T10:39:36.543Z",
-    "runs": 6,
+    "lastRunAt": null,
+    "runs": 0,
     "updatedAt": "2018-01-29T17:16:18.706Z"
   },
   {
     "name": "Lock Out",
     "voice": "lock out",
     "script": "rundll32.exe user32.dll,LockWorkStation;",
-    "runs": 3,
+    "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 4,
-    "lastRunAt": "2018-01-30T10:10:24.624Z",
+    "lastRunAt": null,
     "updatedAt": "2018-01-29T17:17:44.594Z"
   },
   {
@@ -52,10 +52,10 @@
     "name": "Set Volume",
     "voice": "volume to (.*)",
     "script": "$obj = New-Object -com wscript.shell;\n$down = 100/2; $up = {0}/2;\n1..$down | % {$obj.SendKeys([char]174)};\n1..$up | % {$obj.SendKeys([char]175)};",
-    "runs": 5,
+    "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 6,
-    "lastRunAt": "2018-01-30T10:15:53.306Z",
+    "lastRunAt": null,
     "updatedAt": "2018-01-29T17:18:07.184Z",
     "params": "40"
   },
@@ -63,30 +63,30 @@
     "name": "Volume Up",
     "voice": "(increase volume|volume up)",
     "script": "$obj = new-object -com wscript.shell;\n1..5 | % {$obj.SendKeys([char]175)};",
-    "runs": 7,
+    "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 7,
-    "lastRunAt": "2018-01-30T10:39:41.639Z",
+    "lastRunAt": null,
     "updatedAt": "2018-01-29T17:18:14.226Z"
   },
   {
     "name": "Volume Down",
     "voice": "(decrease volume|volume down)",
     "script": "$obj = new-object -com wscript.shell;\n1..5 | % {$obj.SendKeys([char]174)};",
-    "runs": 7,
+    "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 8,
-    "lastRunAt": "2018-01-30T10:09:36.477Z",
+    "lastRunAt": null,
     "updatedAt": "2018-01-29T17:18:17.118Z"
   },
   {
     "name": "Volume Mute",
     "voice": "(mute|unmute)",
     "script": "Start-Process \"D:\\Dropbox\\Software\\Development\\AutoHotkey\\Utility\\ScriptTrigger.ahk\" mute;",
-    "runs": 5,
+    "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 9,
-    "lastRunAt": "2018-01-30T04:14:36.625Z",
+    "lastRunAt": null,
     "updatedAt": "2018-01-29T17:18:24.752Z",
     "params": "mute"
   },
@@ -94,20 +94,10 @@
     "name": "Moon Moon music",
     "voice": "play (moon moon).*(music)",
     "script": "Start-Process \"C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe\" -ArgumentList \"/url https://www.youtube.com/watch?v=fEMNl-vjWpg\";",
-    "runs": 2,
+    "runs": 0,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 10,
-    "lastRunAt": "2018-01-30T04:34:01.189Z",
+    "lastRunAt": null,
     "updatedAt": "2018-01-29T17:18:34.677Z"
-  },
-  {
-    "name": "Test",
-    "script": "Start-Proces \"D:\\noop.ps1\"",
-    "voice": null,
-    "id": 11,
-    "createdAt": "2018-01-30T10:25:56.156Z",
-    "updatedAt": "2018-01-30T10:25:56.156Z",
-    "runs": 5,
-    "lastRunAt": "2018-01-30T10:37:24.264Z"
   }
 ]
