@@ -63,8 +63,11 @@ import { IWatchService } from './_services/interface/watch.service';
       state('false', style({
         width: '0'
       })),
-      transition('false => true', animate('.4s ease-in', style({ width: '20vw' }))),
-      transition('true => false', animate('.4s ease-in', style({ width: '0' })))
+      transition('false => true', [
+        style({ width: '20vw', transform: 'translateX(100%)' }),
+        animate('.4s ease-in', style({ transform: 'translateX(0)' }))
+      ]),
+      transition('true => false', animate('.4s ease-in', style({ transform: 'translateX(100%)' })))
     ])
   ]
 })
@@ -77,7 +80,6 @@ export class AppComponent implements OnInit, OnDestroy {
   public command: Command = {} as Command;
   public commands: Command[];
   public allCommands: Command[];
-  public activities: Activity[];
   public jsonFilter: any = [
     { name: 'JSON', extensions: ['json'] },
     { name: 'All Files', extensions: ['*'] }
@@ -126,7 +128,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public onView(command: Command): void {
-    this.command = command;
+    this.command = { ...command };
     this.command.id = -1;
   }
 

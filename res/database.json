@@ -52,10 +52,10 @@
     "name": "Set Volume",
     "voice": "volume to (.*)",
     "script": "$obj = New-Object -com wscript.shell;\n$down = 100/2; $up = {0}/2;\n1..$down | % {$obj.SendKeys([char]174)};\n1..$up | % {$obj.SendKeys([char]175)};",
-    "runs": 0,
+    "runs": 1,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 6,
-    "lastRunAt": null,
+    "lastRunAt": "2018-01-30T02:06:04.125Z",
     "updatedAt": "2018-01-29T17:18:07.184Z",
     "params": "40"
   },
@@ -83,10 +83,10 @@
     "name": "Volume Mute",
     "voice": "(mute|unmute)",
     "script": "Start-Process \"D:\\Dropbox\\Software\\Development\\AutoHotkey\\Utility\\ScriptTrigger.ahk\" mute;",
-    "runs": 3,
+    "runs": 4,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 9,
-    "lastRunAt": "2018-01-29T18:30:48.940Z",
+    "lastRunAt": "2018-01-30T01:49:19.089Z",
     "updatedAt": "2018-01-29T17:18:24.752Z",
     "params": "mute"
   },
@@ -94,20 +94,10 @@
     "name": "Moon Moon music",
     "voice": "play (moon moon).*(music)",
     "script": "Start-Process \"C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe\" -ArgumentList \"/url https://www.youtube.com/watch?v=fEMNl-vjWpg\";",
-    "runs": 0,
+    "runs": 1,
     "createdAt": "2018-01-22T07:13:06.632Z",
     "id": 10,
-    "lastRunAt": null,
+    "lastRunAt": "2018-01-30T02:06:18.638Z",
     "updatedAt": "2018-01-29T17:18:34.677Z"
-  },
-  {
-    "name": "Test",
-    "script": "abcd",
-    "voice": null,
-    "id": 11,
-    "createdAt": "2018-01-29T15:22:13.280Z",
-    "updatedAt": "2018-01-29T15:22:13.280Z",
-    "runs": 1,
-    "lastRunAt": "2018-01-29T18:29:53.287Z"
   }
 ]

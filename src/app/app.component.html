@@ -5,7 +5,7 @@
     </a>
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <button class="btn btn-link nav-link" [ngClass]="{'active': showTopPage}" (click)="showTopPage = true">Home</button>
+        <button class="btn btn-link nav-link" [ngClass]="{'active': showTopPage}" (click)="showTopPage = true; showActivity = false;">Home</button>
       </li>
       <li class="nav-item">
         <button class="btn btn-link nav-link" [ngClass]="{'active': !showTopPage}" (click)="showTopPage = false">Scripts</button>
@@ -23,12 +23,12 @@
         </button>
       </li>
       <li class="nav-item">
-        <button class="btn btn-link nav-link text-hover-light" (click)="showFilter = true; searchInput.focus();">
+        <button class="btn btn-link nav-link text-hover-light" (click)="showTopPage = false; showFilter = true; searchInput.focus();">
           <app-bytesize-icon id="i-search" size="22" stroke="2"></app-bytesize-icon>
         </button>
       </li>
       <li class="nav-item">
-        <button class="btn btn-link nav-link text-hover-light" (click)="showActivity = !showActivity">
+        <button class="btn btn-link nav-link text-hover-light" (click)="showTopPage = false; showActivity = !showActivity;">
           <app-bytesize-icon id="i-activity" size="22" stroke="2"></app-bytesize-icon>
         </button>
       </li>
@@ -95,29 +95,30 @@
         </div>
       </div>
     </div>
-    <div class="sidebar-wrapper full-page scrollable text-light bg-dark d-flex flex-column justify-content-end">
-      <accordion [closeOthers]="true" [@activity]="showActivity">
-        <accordion-group *ngFor="let activity of commandService.activities; let i = index;" [isOpen]="i + 1 === commandService.activities.length">
-          <div accordion-heading class="d-flex justify-content-between">
-            <small>{{ activity.runAt | amCalendar:{sameDay:'h:mm A'} }}</small>
-            <span *ngIf="activity.isSuccess" class="badge badge-success w-25 rounded-0">Success</span>
-            <span *ngIf="!activity.isSuccess" class="badge badge-danger w-25 rounded-0">Failed</span>
-          </div>
-          <div *ngFor="let command of activity.commands" (click)="onView(command); commandModal.show();" class="lead clickable w-100 text-hover-primary">
-            {{command.name}}
-          </div>
-          <div *ngIf="activity.commands.length === 0" class="lead w-100">
-            <em>Scripts not found</em>
-          </div>
-          <small *ngIf="!activity.voice" class="px-2">
-            triggered manually
+    <accordion [closeOthers]="true" [@activity]="showActivity" class="sidebar-wrapper full-page scrollable text-light bg-dark d-flex flex-column justify-content-end">
+      <accordion-group *ngFor="let activity of commandService.activities; let i = index;" [isOpen]="i + 1 === commandService.activities.length">
+        <div accordion-heading class="d-flex justify-content-between">
+          <small>
+            <app-bytesize-icon id="i-chevron-bottom" size="10" stroke="3"></app-bytesize-icon>
+            {{ activity.runAt | amCalendar:{sameDay:'h:mm A'} }}
           </small>
-          <small *ngIf="activity.voice" class="px-2">
-            by Voice: <em>{{activity.voice}}</em>
-          </small>
-        </accordion-group>
-      </accordion>
-    </div>
+          <span *ngIf="activity.isSuccess" class="badge badge-success w-25 rounded-0">Success</span>
+          <span *ngIf="!activity.isSuccess" class="badge badge-danger w-25 rounded-0">Failed</span>
+        </div>
+        <div *ngFor="let command of activity.commands" (click)="onView(command); commandModal.show();" class="lead clickable w-100 text-hover-primary">
+          {{command.name}}
+        </div>
+        <div *ngIf="activity.commands.length === 0" class="lead w-100">
+          <em>Scripts not found</em>
+        </div>
+        <small *ngIf="!activity.voice" class="px-2">
+          triggered manually
+        </small>
+        <small *ngIf="activity.voice" class="px-2">
+          by Voice: <em>{{activity.voice}}</em>
+        </small>
+      </accordion-group>
+    </accordion>
   </div>
 </main>
 

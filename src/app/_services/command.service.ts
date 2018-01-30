@@ -19,7 +19,7 @@ export class CommandService {
     const path = this.getHistoryPath();
     if (!window.fs.existsSync(path))
       this.activities = [];
-    this.activities = window.jsonwrapper.readFileSync(path);
+    window.jsonwrapper.readFile(path, (err, obj) => this.activities = obj);
   }
 
   public load(): Command[] {
