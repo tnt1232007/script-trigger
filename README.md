@@ -1,27 +1,48 @@
-# ScriptTrigger
+# **Script Trigger**
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.2.
+Database, tool, calculator for pro Hay Day players
 
-## Development server
+# Prerequisites
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+* **Node** v8.4+ and **NPM** v5.4+
+* **Repo** `git clone https://tnt1232007@bitbucket.org/tnt1232007/scripttrigger.git`
 
-## Code scaffolding
+# Installing
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```
+# install npm packages
+npm install
 
-## Build
+# start the server and run electron concurrently
+npm start
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+# Publish
 
-## Running unit tests
+```
+# install npm packages
+npm install
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+# publish packages
+npm publish
+```
 
-## Running end-to-end tests
+# Built With
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+* [Angular 5](https://angular.io/) - The Web framework
+* [Angular CLI](https://cli.angular.io/) - Command line interface for Angular
+* [Bootstrap 4](http://getbootstrap.com/) - An open source toolkit for developing with HTML, CSS, and JS
+* [Electron](https://electronjs.org/) - Build cross platform desktop apps with JavaScript, HTML, and CSS
+* [Electron Packager](https://github.com/electron-userland/electron-packager) - Bundles Electron-based application source code into packages ready for distribution.
+* [HightlightJS](https://highlightjs.org/) - Syntax highlighting for the Web
+* [Pushbullet API](https://docs.pushbullet.com/) - Send/receive pushes using the Pushbullet server
 
-## Further help
+# Authors
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+* **TNT** - [tnt1232007](tnt1232007@gmail.com)
+
+# Screenshots
+
+![screenshot1](.screenshots/screenshot1.png "Home page")
+
+![screenshot2](.screenshots/screenshot2.png "Script page")

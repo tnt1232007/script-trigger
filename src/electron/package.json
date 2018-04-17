@@ -2,7 +2,7 @@
   "name": "script-trigger",
   "productName": "ScriptTrigger",
   "description": "Create and manage script. Allow remote control Windows machine through Pushbullet and IFTTT.",
-  "version": "3.4.3",
+  "version": "3.4.4",
   "author": {
     "name": "TNT",
     "email": "tnt1232007@gmail.com"
