@@ -1,6 +1,6 @@
 # **Script Trigger**
 
-Database, tool, calculator for pro Hay Day players
+A service that allows you to control your PC through defined scripts. Scripts can be triggered manually or by voice activation (Alexa, Google Home...) via Pushbullet API.
 
 # Prerequisites
 
