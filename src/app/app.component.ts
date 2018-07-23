@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SortableComponent } from 'ngx-bootstrap/sortable';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/finally';
+import { finalize } from 'rxjs/operators';
 
 import { Configuration } from './_models/configuration';
 import { Command } from './_models/command';
-import { Activity } from './_models/activity';
 import { StoreService } from './_services/store.service';
 import { CommandService } from './_services/command.service';
 import { PushBulletService } from './_services/pushbullet.service';
@@ -141,7 +139,7 @@ export class AppComponent implements OnInit, OnDestroy {
     command.lastRunAt = new Date();
     command.runs = command.runs ? command.runs + 1 : 1;
     this.commandService.run(command)
-      .finally(() => this.commandService.save(this.commands))
+      .pipe(finalize(() => this.commandService.save(this.commands)))
       .subscribe();
   }
 

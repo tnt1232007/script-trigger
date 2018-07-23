@@ -89,15 +89,5 @@
     "lastRunAt": null,
     "updatedAt": "2018-01-29T17:18:24.752Z",
     "params": "mute"
-  },
-  {
-    "name": "Moon Moon music",
-    "voice": "play (moon moon).*(music)",
-    "script": "Start-Process \"C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe\" -ArgumentList \"/url https://www.youtube.com/watch?v=fEMNl-vjWpg\";",
-    "runs": 0,
-    "createdAt": "2018-01-22T07:13:06.632Z",
-    "id": 10,
-    "lastRunAt": null,
-    "updatedAt": "2018-01-29T17:18:34.677Z"
   }
 ]

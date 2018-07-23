@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
-import { Configuration } from '../_models/configuration';
 import { StoreService } from './store.service';
 
 @Injectable()

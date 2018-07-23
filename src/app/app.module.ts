@@ -10,7 +10,6 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { MomentModule } from 'angular2-moment';
 import { HighlightModule } from 'ngx-highlightjs';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
-import { ElasticModule } from 'angular2-elastic';
 
 import { ByteSizeIconComponent } from './nested-components/bytesize-icon/bytesize-icon.component';
 import { AppComponent } from './app.component';
@@ -28,7 +27,6 @@ import { PushBulletService } from './_services/pushbullet.service';
     BrowserAnimationsModule,
     FormsModule,
     MomentModule,
-    ElasticModule,
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
     SortableModule.forRoot(),

@@ -181,7 +181,7 @@
               <div class="form-group row">
                 <label for="inputCommand" class="col-sm-2 col-form-label">Script</label>
                 <div class="col-sm-10">
-                  <textarea fz-elastic [(ngModel)]="command.script" [ngClass]="{'is-valid': script.valid && !script.pristine, 'is-invalid': !script.valid && !script.pristine}"
+                  <textarea [(ngModel)]="command.script" [ngClass]="{'is-valid': script.valid && !script.pristine, 'is-invalid': !script.valid && !script.pristine}"
                     class="form-control" id="inputScript" name="inputScript" #script="ngModel" rows="1" required></textarea>
                   <div [hidden]="script.valid || script.pristine" class="invalid-feedback">
                     Script is required

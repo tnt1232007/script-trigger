@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/finally';
+import { Observable, empty, from } from 'rxjs';
+import { tap, finalize } from 'rxjs/operators';
 
-import { environment } from '../../environments/environment';
 import { StoreService } from './store.service';
 import { Command } from '../_models/command';
 import { Activity } from '../_models/activity';
@@ -60,8 +55,7 @@ export class CommandService {
       voice: voice,
       runAt: new Date()
     } as Activity;
-    return this.internalRun(activity, ...commands)
-      .finally(() => this.save(allCommands));
+    return this.internalRun(activity, ...commands).pipe(finalize(() => this.save(allCommands)));
   }
 
   public run(...commands: Command[]): Observable<any> {
@@ -78,24 +72,23 @@ export class CommandService {
     const ps = new window.powershell({ debugMsg: false });
 
     if (!commands || commands.length === 0) {
-      obs = Observable.empty();
+      obs = empty();
       activity.isSuccess = false;
       activity.response = 'No commands';
     } else {
       for (const cmd of commands) {
         ps.addCommand(cmd.script.format(...cmd.params ? cmd.params.split(',') : []) + ';');
       }
-      obs = Observable
-        .fromPromise(ps.invoke())
-        .do(res => {
+      obs = from(ps.invoke())
+        .pipe(tap(res => {
           activity.isSuccess = true;
           activity.response = res;
         }, err => {
           activity.isSuccess = false;
           activity.response = err.replace(/.\[31m/g, '').replace(/.\[39m/g, '');
-        });
+        }));
     }
-    return obs.finally(() => {
+    return obs.pipe(finalize(() => {
       this.activities = this.activities.concat(activity);
       const hour = this.storeService.load().clearActivityAfterHours;
       if (hour > 0) {
@@ -105,7 +98,7 @@ export class CommandService {
       }
       window.jsonwrapper.writeFileSync(this.getHistoryPath(), this.activities, { spaces: 2 });
       ps.dispose();
-    });
+    }));
   }
 
   private getDatabasePath(): string {
